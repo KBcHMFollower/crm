@@ -28,7 +28,7 @@ export const ClientPage: React.FC = () => {
 
   const [message, setMessage] = React.useState('');
 
-  const {workerid, role} = useAppSelector((state=>({workerid: state.user.id, role: state.user.role})))
+  const {workerid, role} = useAppSelector((state=>({workerid: state.user.workerInfo.id, role: state.user.workerInfo.role})))
 
   const { data: clientData, isLoading: isClientLoading } = useGetClientQuery(Number(userId));
   const { data: directionsData, isLoading: isDirectionsLoading } = useGetDirectionsQuery(null);

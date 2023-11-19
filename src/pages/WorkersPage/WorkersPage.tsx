@@ -15,7 +15,7 @@ export const WorkersPage = () => {
     const [rateType, setRateType] = useState('');
     const [page, setPage] = useState(1);
 
-    const userRole = useAppSelector(state => state.user.role);
+    const userRole = useAppSelector(state => state.user.workerInfo.role);
 
     const { data: WorkersData, error: WorkersError, isLoading: isWorkersLoading } = useFetchAllWorkersQuery({ limit: limit, page: page, role: role, rateType: rateType });
     const { data: RateTypesData, error: RateTypesError, isLoading: isRateTypesLoading } = useFetchGetRateTypesQuery(null);

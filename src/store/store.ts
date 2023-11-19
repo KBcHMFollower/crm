@@ -11,7 +11,7 @@ export const store = configureStore({
     reducer: rootReducer,
     middleware:
         (getdefaultMiddleware) =>
-            getdefaultMiddleware().concat(Api.middleware)
+            getdefaultMiddleware().concat(Api.middleware),
 })
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -22,10 +22,11 @@ const VisuallyHiddenInput = styled('input')({
 export const ProfilePage: React.FC = () => {
 
   const { userId: idParam } = useParams();
-  const { stateId, role } = useAppSelector(state => ({
-    stateId: state.user.id,
-    role: state.user.role 
+  const { stateId, role} = useAppSelector(state => ({
+    stateId: state.user.workerInfo.id,
+    role: state.user.workerInfo.role,
   }));
+
 
   const userId = idParam ? +idParam : stateId;
   const updateble = role === 'admin' || 'manager' ? true : false;

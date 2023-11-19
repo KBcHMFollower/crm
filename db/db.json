@@ -1,20 +1,20 @@
 {
   "workers": [
     {
-      "id": 0,
+      "id": 1,
       "fname": "1",
       "lanme": "awsd",
-      "login": "login",
-      "pass": "123",
+      "login": "admin",
+      "pass": "admin",
       "birthday": "2023-11-01",
       "phone": "34235",
       "email": "vlad@mail.ru",
-      "role": "teacher",
+      "role": "admin",
       "ratetype": "hour",
       "rate": 1
     },
     {
-      "id": 1,
+      "id": 0,
       "fname": "Alex1",
       "lanme": "Fedorov",
       "login": "login",
@@ -95,14 +95,17 @@
   "roles": [
     {
       "name": "teacher",
+      "rights":["clients-section", "write-comments"],
       "id": 0
     },
     {
       "name": "admin",
+      "rights":["all"],
       "id": 1
     },
     {
       "name": "manager",
+      "rights":["all"],
       "id": 2
     }
   ],
@@ -374,5 +377,52 @@
       "message": "awsdawsd",
       "id": 8
     }
+  ],
+  "rights":[
+    {
+      "name":"update-leads",
+      "id":0
+    },
+    {
+      "name":"clients-section",
+      "id":1
+    },
+    {
+      "name":"roles-section",
+      "id":2
+    },
+    {
+      "name":"workers-section",
+      "id":3
+    },
+    {
+      "name":"leads-section",
+      "id":4
+    },
+    {
+      "name":"write-comments",
+      "id":5
+    },
+    {
+      "name":"see-comments",
+      "id":6
+    },
+    {
+      "name":"create-workers",
+      "id":7
+    },
+    {
+      "name":"create-clients",
+      "id":8
+    },
+    {
+      "name":"update-worker",
+      "id":9
+    },
+    {
+      "name":"update-client",
+      "id":10
+    }
   ]
+  
 }

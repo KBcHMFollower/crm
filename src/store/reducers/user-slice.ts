@@ -1,44 +1,58 @@
-import { createSlice, PayloadAction  } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IWorker } from "../../api/interfaces";
+import { fetchLogIn } from "../../api/thunks/userThunks";
 
-const initialState:IWorker = {
-    id:2,
-    fname:'Vlad',
-    lanme:'Melnikov',
-    birthday:'13/13/13',
-    phone:'567567',
-    email:'vlad@gmail.com',
-    role:'admin',
-    ratetype:'hour',
-    rate:0,
-    login:'',
-    pass:''
+
+type InitialType = {
+    workerInfo:IWorker;
+    isAuth:boolean;
+    isLoading:boolean;
+}
+
+const initialState:InitialType = {
+    workerInfo: {
+        id: -1,
+        fname: '',
+        lanme: '',
+        birthday: '',
+        phone: '',
+        email: '',
+        role: '',
+        ratetype: '',
+        rate: 0,
+        login:'',
+        pass:''
+    },
+    isAuth: false,
+    isLoading: false
 }
 
 const userSlice = createSlice({
-    name:'user',
+    name: 'user',
     initialState,
-    reducers:{
-        setUserFname:(state, action:PayloadAction<string>)=>{
-            state.fname = action.payload;
-        },
-        setUserRole:(state, action:PayloadAction<string>)=>{
-            state.role = action.payload;
-        },
-        setUserLname:(state, action:PayloadAction<string>)=>{
-            state.lanme = action.payload;
-        },
-        setUserBirthday:(state, action:PayloadAction<string>)=>{
-            state.birthday = action.payload;
-        },
-        setUserPhone:(state, action:PayloadAction<string>)=>{
-            state.phone = action.payload;
-        },
-        setUserEmail:(state, action:PayloadAction<string>)=>{
-            state.email = action.payload;
+    reducers: {
+        setUserRole: (state, action: PayloadAction<string>) => {
+            state.workerInfo.role = action.payload;
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchLogIn.fulfilled, (state, action: PayloadAction<IWorker[]>) => {
+                state.workerInfo = action.payload[0];
+                state.isAuth = true;
+                state.isLoading = false;
+                console.log('full');
+            })
+            .addCase(fetchLogIn.pending, (state) => {
+                state.isLoading = true;
+                console.log('pen');
+            })
+            .addCase(fetchLogIn.rejected, (state) => {
+                state.isLoading = false;
+                console.log('rej');
+            })
     }
 })
 
-export const {setUserBirthday, setUserEmail, setUserFname, setUserLname, setUserPhone, setUserRole} = userSlice.actions;
+export const { setUserRole } = userSlice.actions;
 export default userSlice.reducer;

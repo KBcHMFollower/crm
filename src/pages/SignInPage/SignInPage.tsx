@@ -10,20 +10,44 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLogIn } from '../../api/thunks/userThunks';
+import userSlice from '../../store/reducers/user-slice';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const defaultTheme = createTheme();
 
 export default function SignInPage() {
+
+
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const {isAuth,isLoading} = useAppSelector(state=>({isAuth: state.user.isAuth, isLoading:state.user.isLoading}));
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      login: data.get('login'),
-      password: data.get('password'),
-    });
+    const body = {
+      login: data.get('login') as string,
+      pass: data.get('password') as string,
+    }
+
+
+    if (!Object.values(body).some(e=>e === '' || null)){
+        dispatch(fetchLogIn(body));
+    }
   };
+
+  console.log(isAuth, isLoading);
+
+  if(isAuth){
+    console.log('navigate');
+    navigate('/');
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
