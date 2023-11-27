@@ -1,10 +1,18 @@
 const ApiError = require("../errors/ApiError")
 const { Status } = require("../models/models")
 
+const findStatusesAttributes = {
+    exclude: ["createdAt", "updatedAt"],
+  };
+
 class StatusesController{
     async getAll(req,res, next){
         try {
-            const statuses = await  Status.findAll()
+            const statuses = await  Status.findAll({
+                attributes:{
+                    ...findStatusesAttributes
+                }
+            })
             res.json(statuses)
         } catch (e) {
             return next(ApiError.badRequest(e.message))

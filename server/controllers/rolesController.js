@@ -1,10 +1,18 @@
 const ApiError = require("../errors/ApiError")
 const {Role} = require('../models/models')
 
+const findRolesAttributes = {
+    exclude: ["createdAt", "updatedAt"],
+  };
+
 class RolesController{
     async getAll(req,res,next){
         try {
-            const roles = await  Role.findAll()
+            const roles = await  Role.findAll({
+                attributes:{
+                    ...findRolesAttributes
+                }
+            })
             res.json(roles)
         } catch (e) {
             return next(ApiError.badRequest(e.message))
