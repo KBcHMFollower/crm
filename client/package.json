@@ -17,7 +17,6 @@
     "@types/react-dom": "^18.2.15",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.1",
-    "json-server": "^0.17.4",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -28,10 +27,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start-client": "set PORT=3001&& react-scripts start",
-    "start-server": "npx json-server --watch ./db/db.json --port 3000",
-    "build": "react-scripts build",
-    "dev": "concurrently \"npm run start-client\" \"npm run start-server\""
+    "start-client": "set PORT=3000&& react-scripts start",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
