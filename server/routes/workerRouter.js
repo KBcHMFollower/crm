@@ -10,5 +10,6 @@ router.post('/login', workersController.login)
 router.get('/auth', authMiddleware, workersController.check)
 router.get('/', workersController.getAll)
 router.get('/:id', workersController.getOne)
+router.put('/:id', workersController.update)
 
 module.exports = router

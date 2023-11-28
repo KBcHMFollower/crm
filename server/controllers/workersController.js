@@ -11,11 +11,11 @@ const findRoleAttributes = {
   exclude: ["createdAt", "updatedAt"],
 };
 const findRateAttributes = {
-  exclude: ["createdAt", "updatedAt", "WorkerId"],
+  exclude: ["createdAt", "updatedAt", "WorkerId", "RateTypeId"],
 };
 const findRateTypeAttributes = {
-    exclude: ["createdAt", "updatedAt"],
-  };
+  exclude: ["createdAt", "updatedAt"],
+};
 
 const generateJwt = (id, email, role) => {
   return jwt.sign(
@@ -88,13 +88,14 @@ class WorkerController {
             attributes: {
               ...findRateAttributes,
             },
-            include:[
-                {model: RateType,
-                    attributes:{
-                        ...findRateTypeAttributes
-                    }
-                }
-              ],
+            include: [
+              {
+                model: RateType,
+                attributes: {
+                  ...findRateTypeAttributes,
+                },
+              },
+            ],
           },
           {
             model: Role,
@@ -119,42 +120,43 @@ class WorkerController {
 
   async getOne(req, res, next) {
     try {
-        const {id} = req.params
-        if (!id) return next(ApiError.badRequest('id не указан'))
+      const { id } = req.params;
+      if (!id) return next(ApiError.badRequest("id не указан"));
 
-        const worker = await Worker.findOne({
-            where:{
-                id: id
-            },
-            include:[
-                {
-                  model: WorkerRate,
-                  include:[
-                    {model: RateType,
-                        attributes:{
-                            ...findRateTypeAttributes
-                        }
-                    }
-                  ],
-                  attributes: {
-                    ...findRateAttributes,
-                  },
+      const worker = await Worker.findOne({
+        where: {
+          id: id,
+        },
+        include: [
+          {
+            model: WorkerRate,
+            include: [
+              {
+                model: RateType,
+                attributes: {
+                  ...findRateTypeAttributes,
                 },
-                {
-                  model: Role,
-                  attributes: {
-                    ...findRoleAttributes,
-                  },
-                },
-              ],
-              attributes: {
-                ...findWorkerAttributes,
               },
-        })
+            ],
+            attributes: {
+              ...findRateAttributes,
+            },
+          },
+          {
+            model: Role,
+            attributes: {
+              ...findRoleAttributes,
+            },
+          },
+        ],
+        attributes: {
+          ...findWorkerAttributes,
+        },
+      });
 
-        res.json(worker)
+      res.json(worker);
     } catch (error) {
-        next(ApiError.badRequest(error.message))
+      next(ApiError.badRequest(error.message));
     }
   }
 
@@ -236,6 +238,103 @@ class WorkerController {
         rateType: findRateType.name,
         rate: workerRate.rate,
       });
+    } catch (error) {
+      return next(ApiError.badRequest(error.message));
+    }
+  }
+
+  async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { fname, lname, email, phone, birthday, role, rate, rateType } =
+        req.body;
+
+      var workerAttributes = {
+        fname,
+        lname,
+        email,
+        phone,
+        birthday,
+      };
+
+
+      //поля worker
+      if (!id) return next(ApiError.badRequest("Не указан id"));
+
+      const worker = await Worker.findOne({
+        where: { id: id },
+      });
+      if (!worker)
+        return next(ApiError.badRequest("Работник с заданным id не найден"));
+
+      await worker.update({
+        ...workerAttributes,
+      });
+
+      //поля role
+      if (role) {
+        const roleOb = await Role.findOne({
+          where: { name: role },
+        });
+
+        if (!roleOb) return next(ApiError.badRequest("Роли с заданным именем не существует"));
+
+        await worker.setRole(roleOb)
+      }
+
+      const workerRateOb = await worker.getWorkersRate()
+      //поля WorkerRate
+      if (rate || rateType){
+        if (rateType){
+          const rateTypeOb = await RateType.findOne({
+            where: {name:rateType}
+          })
+
+          if (!rateTypeOb) return next(ApiError.badRequest("Rate type с заданным именем нет"));
+
+          await workerRateOb.setRateType(rateTypeOb)
+          
+        }
+        if (rate){
+          workerRateOb.update({
+            rate: rate
+          })
+        }
+      }
+
+      const workerRateTypeOb = await workerRateOb.getRateType()
+      const workerRoleOb = await worker.getRole()
+
+      const workerRateRes = {
+        id: workerRateOb.id,
+        rate: workerRateOb.rate,
+        RateType:{
+          id:workerRateTypeOb.id,
+          name:workerRateTypeOb.name
+        }
+      }
+
+      const workerRoleRes = {
+        id: workerRoleOb.id,
+        name: workerRoleOb.name
+      }
+
+      const workerRes = {
+        id: worker.id,
+        fname: worker.fname,
+        lname: worker.lname,
+        email: worker.email,
+        phone: worker.phone,
+        birthday: worker.birthday,
+        WorkersRate:{
+          ...workerRateRes
+        },
+        Role:{
+          ...workerRoleRes
+        }
+      };
+
+      res.json(workerRes);
     } catch (error) {
       return next(ApiError.badRequest(error.message));
     }

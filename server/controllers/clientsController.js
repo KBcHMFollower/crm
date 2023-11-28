@@ -137,6 +137,86 @@ class ClientsController {
       return next(ApiError.badRequest(error.message));
     }
   }
+
+  async update(req, res, next){
+    try {
+      const { id } = req.params;
+      const { fname, lname, email, phone, birthday, status, direction} =
+        req.body;
+
+      var clientAttributes = {
+        fname,
+        lname,
+        email,
+        phone,
+        birthday,
+      };
+
+
+      //поля client
+      if (!id) return next(ApiError.badRequest("Не указан id"));
+
+      const client = await Client.findOne({
+        where: { id: id },
+      });
+      if (!client) return next(ApiError.badRequest("Клиент с заданным id не найден"));
+
+      await client.update({
+        ...clientAttributes,
+      });
+
+      //поля status
+      if (status) {
+        const statusOb = await Status.findOne({
+          where: { name: status },
+        });
+
+        if (!statusOb) return next(ApiError.badRequest("Статус с заданным именем не существует"));
+
+        await client.setStatus(statusOb)
+      }
+
+      //поля direction
+      if (direction) {
+        const directionOb = await Direction.findOne({
+          where: { name: direction },
+        });
+
+        if (!directionOb) return next(ApiError.badRequest("Направления с заданным именем не существует"));
+
+        await client.setDirection(directionOb)
+      }
+
+      const clientDirectionOb = await client.getDirection()
+      const clientStatusOb = await client.getStatus()
+
+      const clientDirectionRes = {
+        id: clientDirectionOb.id,
+        name: clientDirectionOb.name
+      }
+
+      const clientStatusRes = {
+        id: clientStatusOb.id,
+        name: clientStatusOb.name
+      }
+
+      const clientRes = {
+        id: client.id,
+        lessons_count: client.lessons_count,
+        fname: client.fname,
+        lname: client.lname,
+        email: client.email,
+        phone: client.phone,
+        birthday: client.birthday,
+        Status:{...clientStatusRes},
+        Direction: {...clientDirectionRes}
+      };
+
+      res.json(clientRes);
+    } catch (error) {
+      return next(ApiError.badRequest(error.message));
+    }
+  }
 }
 
 module.exports = new ClientsController();
