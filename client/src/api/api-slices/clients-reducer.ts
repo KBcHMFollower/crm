@@ -1,13 +1,11 @@
 import { IClient, IDirection, INote, IRateType, IRole, IStatus, IWorker } from '../interfaces';
 import Api from '../api';
 
-export interface IClientUpdate{
+export interface IClientCreate{
     direction: string;
-    lessons_count:number;
-    lessons_buyed:number;
     status:string;
     fname:string;
-    lanme:string;
+    lname:string;
     birthday:string;
     phone:string;
     email:string;
@@ -16,30 +14,24 @@ export interface IClientUpdate{
 export interface INotePush{
     workerid:number;
     clientid:number;
-    message:string;
+    content:string;
 }
 
 export const clientsApi = Api.injectEndpoints({
     endpoints: (builder) => ({
-        GetAllUsers: builder.query<{clients:IClient[]; totalCount:number}, {limit?:number; page?:number; direction?:string, status?:string}>({
+        GetAllUsers: builder.query<{rows: IClient[], count:number}, {limit?:number; page?:number; direction?:string, status?:string}>({
             query: ({limit, page, direction, status})=>{
                 const directionProps = direction ? `&direction=${direction}` : '';
                 const statusProps = status ? `&status=${status}` : '';
-                const limitProps = limit ? `&_limit=${limit}` : '';
-                const pageProps = page ? `&_page=${page}` : '';
+                const limitProps = limit ? `&limit=${limit}` : '';
+                const pageProps = page ? `&page=${page}` : '';
                 return `clients?${limitProps}${pageProps}${directionProps}${statusProps}`;
-            },
-            transformResponse(response:IClient[], meta){
-                return{
-                    clients: response,
-                    totalCount: Number(meta?.response?.headers.get('X-Total-Count')),
-                };
             },
             providesTags:result=>['Clients']
         }),
-        GetNotes: builder.query<INote[], number>({
+        GetNotes: builder.query<{rows:INote[], count:number}, number>({
             query: (number)=>{
-                return `notes?clientid=${number}`;
+                return `/notes?clientid=${number}`;
             },
             providesTags:result=>['Notes']
         }),
@@ -56,22 +48,22 @@ export const clientsApi = Api.injectEndpoints({
             providesTags: result=>['Clients'] // Замените на действительный URL
           }),
         getDirections: builder.query<IDirection[], null>({
-            query: ()=>'directions'
+            query: ()=>'/directions'
         }),
         getStatuses: builder.query<IStatus[], null>({
-            query: ()=>'clientstatuses'
+            query: ()=>'/statuses'
         }),
         updateClient: builder.mutation({
             query: ({id,stateName,dataToUpdate}) => ({
               url: `/clients/${id}`, // Замените на свой путь обновления данных
-              method: 'PATCH',
+              method: 'PUT',
               body: {
                 [stateName]:dataToUpdate
               },
             }),
             invalidatesTags: ['Clients']
           }),
-        createClient: builder.mutation<IClient, IClientUpdate>({
+        createClient: builder.mutation<IClient, IClientCreate>({
             query: (newWorker) => ({
               url: '/clients',
               method: 'POST',

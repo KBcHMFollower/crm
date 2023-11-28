@@ -44,11 +44,15 @@ export const ClientsPage = () => {
                             flexWrap: 'wrap',
                             justifyContent: 'space-between'
                         }}>
-                            {clientsData.clients.map((e) => <ClientCard key={e.id} clientId={e.id} clientDirection={e.direction} clientName={e.fname} clientSname={e.lanme} />)}
+                            {clientsData.rows.map((e) => <ClientCard key={e.id}
+                             clientId={e.id}
+                              clientDirection={e.Direction.name}
+                               clientName={e.fname}
+                                clientSname={e.lname} />)}
                         </Box>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center', my: 1 }}>
-                        <Pagination count={Math.ceil(clientsData.totalCount/limit)} shape='rounded' variant='outlined' onChange={(e, p) => setPage(p)} />
+                        <Pagination count={Math.ceil(clientsData.count/limit)} shape='rounded' variant='outlined' onChange={(e, p) => setPage(p)} />
                     </Box>
 
                     <CreateClientModalWindow open={workersModalOpen} setOpen={setWorkersModalOpen} />

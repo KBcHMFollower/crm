@@ -22,11 +22,12 @@ const defaultTheme = createTheme();
 
 export default function SignInPage() {
 
-
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const {isAuth,isLoading} = useAppSelector(state=>({isAuth: state.user.isAuth, isLoading:state.user.isLoading}));
+  const {isAuth,isLoading, error} = useAppSelector(state=>
+    ({isAuth: state.user.isAuth, 
+    isLoading:state.user.isLoading,
+    error: state.user.error}));
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,8 +42,6 @@ export default function SignInPage() {
         dispatch(fetchLogIn(body));
     }
   };
-
-  console.log(isAuth, isLoading);
 
   if(isAuth){
     console.log('navigate');
@@ -92,6 +91,11 @@ export default function SignInPage() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            {error && (
+              <Typography color={'red'}>
+                {error}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth

@@ -1,31 +1,23 @@
 import api, { Api } from "../api";
 import { IRateType, IRole, IWorker } from "../interfaces";
-export interface  IWorkerUpdate{
+export interface  IWorkerCreate{
+  fname: string;
+  lname: string;
   login: string;
   pass:string;
-  fname: string;
-  lanme: string;
-  birthday: string;
-  email: string;
   phone: string;
-  ratetype: string;
+  email: string;
+  birthday: string;
+  rateType: string;
   rate: number;
   role: string;
 }
 export const workersApi = Api.injectEndpoints({
   endpoints:(builder) => ({
-    fetchAllWorkers: builder.query<{ workers: IWorker[]; totalCount: number }, { limit?: number; page?: number; role?: string; rateType?: string }>({
-      query: ({ limit = 1, page = 1, role = '', rateType = '' }) => {
+    fetchAllWorkers: builder.query<{count:number,rows: IWorker[]}, { limit?: number; page?: number; role?: string;}>({
+      query: ({ limit = 1, page = 1, role = ''}) => {
         const roleQuery = role ? `&role=${role}` : '';
-        const rateTypeQuery = rateType ? `&ratetype=${rateType}` : '';
-        return `/workers?_limit=${limit}&_page=${page}${roleQuery}${rateTypeQuery}`;
-      },
-      transformResponse(response: IWorker[], meta) {
-        console.log(response);
-        return {
-          workers: response,
-          totalCount: Number(meta?.response?.headers.get('X-Total-Count')),
-        };
+        return `/workers?limit=${limit}&page=${page}${roleQuery}`;
       },
       providesTags: result=>['Workers']
     }),
@@ -37,9 +29,9 @@ export const workersApi = Api.injectEndpoints({
       query: () => `/roles`, // Замените на действительный URL
     }),
     fetchGetRateTypes: builder.query<IRateType[], null>({
-      query: () => `/rateTypes`, // Замените на действительный URL
+      query: () => `/ratetypes`, // Замените на действительный URL
     }),
-    createWorker: builder.mutation<IWorker, IWorkerUpdate>({
+    createWorker: builder.mutation<IWorker, IWorkerCreate>({
       query: (newWorker) => ({
         url: '/workers',
         method: 'POST',
@@ -50,7 +42,7 @@ export const workersApi = Api.injectEndpoints({
     updateWorker: builder.mutation({
       query: ({id,stateName,dataToUpdate}) => ({
         url: `/workers/${id}`, // Замените на свой путь обновления данных
-        method: 'PATCH',
+        method: 'PUT',
         body: {
           [stateName]:dataToUpdate
         },

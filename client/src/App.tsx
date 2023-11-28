@@ -8,19 +8,33 @@ import { RolesPage } from './pages/RolesPage/RolesPage';
 import SignInPage from './pages/SignInPage/SignInPage';
 import { ClientPage } from './pages/ClientPage/ClientPage';
 import { LeadsPage } from './pages/LeadsPage/LeadsPage';
-import { useAppSelector } from './hooks/redux';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
+import { LOGIN_ROUTE } from './utils/consts';
+import { AppRouter } from './components/AppRouter';
+import { useEffect } from 'react';
+import { fetchCheckAuth } from './api/thunks/userThunks';
 
 function App() {
+
+
+
+  useEffect(()=>{
+    dispatch(fetchCheckAuth())
+  },[])
+
+  const dispatch = useAppDispatch()
+  const { role, isAuth } = useAppSelector(state => ({ role: state.user.user.role, isAuth: state.user.isAuth }));
+
   const location = window.location
 
-  const { role, isAuth } = useAppSelector(state => ({ role: state.user.workerInfo.role, isAuth: state.user.isAuth }));
+
 
   return (
     <div className="App">
       <BrowserRouter>
-        {location.pathname !== '/login' && <Header role={role} />}
+        {location.pathname !== LOGIN_ROUTE && <Header role={role} />}
         <Container sx={{ backgroundColor: '#adadadc1', borderRadius: 3, py: 1, my: 2 }}>
-          <Routes>
+          {/* <Routes>
             {!isAuth ? (
               <>
                 <Route path='/login' element={<SignInPage />} />
@@ -45,7 +59,8 @@ function App() {
               </>
             )}
 
-          </Routes>
+          </Routes> */}
+          <AppRouter isAuth={isAuth} role={role}/>
         </Container>
 
       </BrowserRouter>

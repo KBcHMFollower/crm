@@ -1,31 +1,31 @@
 export interface IUser{
     id:number;
     fname:string;
-    lanme:string;
+    lname:string;
     birthday:string;
     phone:string;
     email:string;
 }
 
 export interface IWorker extends IUser{
-    role:string;
-    ratetype:string;
-    rate:number;
-    login:string;
-    pass:string;
+    WorkersRate:{
+        id:number;
+        rate:number;
+        RateType:IRateType,
+    },
+    Role:IRole
 }
 
 export interface IClient extends IUser{
-    direction: string;
     lessons_count:number;
-    lessons_buyed:number;
-    status:string;
+    Status:IStatus,
+    Direction:IDirection
 }
 
 export interface IRole{
     name:string;
     id:number;
-}[]
+}
 
 export interface IDirection{
     name:string;
@@ -35,17 +35,17 @@ export interface IDirection{
 export interface IRateType{
     name:string;
     id:number;
-}[]
+}
 
 export interface IStatus{
     name:string;
     id:number;
-}[]
+}
 
 export interface INote{
     id:number;
-    clientid:number;
-    workerid:number;
-    message:string;
+    ClientId:number;
+    WorkerId:number;
+    content:string;
 }
 

@@ -2,7 +2,7 @@ import { Box, Pagination, TextField} from '@mui/material'
 import { useState } from 'react'
 import { RoleCard} from '../../components/RoleCard/RoleCard';
 
-export const RolesPage = () => {
+export const RolesPage:React.FC = () => {
 
     const [findName, setFindName] = useState('');
 

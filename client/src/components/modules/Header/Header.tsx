@@ -14,7 +14,8 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
 import { useDispatch} from 'react-redux';
 import { FormControl, InputLabel, Paper, Select } from '@mui/material';
-import { setUserRole } from '../../../store/reducers/user-slice';
+import { logOut } from '../../../store/reducers/user-slice';
+import { useAppDispatch } from '../../../hooks/redux';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -27,7 +28,7 @@ export const Header: React.FC<PropsType> = ({ role }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -43,6 +44,10 @@ export const Header: React.FC<PropsType> = ({ role }) => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const onLogOutClick = ()=>{
+    dispatch(logOut())
+  }
 
   return (
     <AppBar position="static">
@@ -100,7 +105,7 @@ export const Header: React.FC<PropsType> = ({ role }) => {
               </Link>
             )}
 
-            {role === 'admin' && (
+            {role === 'ADMIN' && (
               <Link to="/roles">
                 <Button
                   onClick={handleCloseNavMenu}
@@ -111,25 +116,6 @@ export const Header: React.FC<PropsType> = ({ role }) => {
               </Link>
             )}
 
-           
-              <FormControl sx={{ m: 1, minWidth: 120 }} size={"small"}>
-                <InputLabel id="demo-select-small-label">{'Select your role'}</InputLabel>
-                <Select
-                  sx={{ backgroundColor: 'white' }}
-                  name={'selecter'}
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={role}
-                  label={'Select your role'}
-                  onChange={(e) => dispatch(setUserRole(e.target.value))}
-                >
-                  <MenuItem value="admin">
-                    <em>admin</em>
-                  </MenuItem>
-                  <MenuItem value={'manager'}>manager</MenuItem>
-                  <MenuItem value={'teacher'}>teacher</MenuItem>
-                </Select>
-              </FormControl>
 
           </Box>
 
@@ -163,7 +149,7 @@ export const Header: React.FC<PropsType> = ({ role }) => {
               </Link>
 
               <Link to='/log-in'>
-                <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem onClick={onLogOutClick}>
                   <Typography textAlign="center">Log-out</Typography>
                 </MenuItem>
               </Link>

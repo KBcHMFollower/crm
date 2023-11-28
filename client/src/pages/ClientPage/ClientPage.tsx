@@ -28,7 +28,7 @@ export const ClientPage: React.FC = () => {
 
   const [message, setMessage] = React.useState('');
 
-  const {workerid, role} = useAppSelector((state=>({workerid: state.user.workerInfo.id, role: state.user.workerInfo.role})))
+  const {workerid, role} = useAppSelector((state=>({workerid: state.user.user.id, role: state.user.user.role})))
 
   const { data: clientData, isLoading: isClientLoading } = useGetClientQuery(Number(userId));
   const { data: directionsData, isLoading: isDirectionsLoading } = useGetDirectionsQuery(null);
@@ -39,8 +39,8 @@ export const ClientPage: React.FC = () => {
   const [createNote,{}] = useCreateNoteMutation()
 
   const postNote = ()=>{
-    createNote({workerid:workerid, clientid:Number(userId), message:message});
     setMessage('');
+    createNote({workerid:workerid, clientid:Number(userId), content:message});
   }
 
   const updatable = role === 'admin' || 'manager' ? true : false
@@ -59,7 +59,7 @@ export const ClientPage: React.FC = () => {
             </Button>
 
             <Typography fontSize={20}>
-              Name
+              {clientData.fname + ' ' + clientData.lname}
             </Typography>
           </Box>
 
@@ -73,7 +73,7 @@ export const ClientPage: React.FC = () => {
             <ProfileTextField
               lable='LastName'
               onBlurCall={(stateName: string, newValue: string) => updateClient({ id: userId, stateName: stateName, dataToUpdate: newValue })}
-              defaultValue={clientData.lanme}
+              defaultValue={clientData.lname}
               updateble={updatable}
               stateName='lname' />
             <ProfileTextField
@@ -103,17 +103,17 @@ export const ClientPage: React.FC = () => {
               type='number'
               updateble={updatable}
               stateName='lessons_count' />
-            <ProfileTextField
+            {/* <ProfileTextField
               lable='Lessons buyed'
               onBlurCall={(stateName: string, newValue: string) => updateClient({ id: userId, stateName: stateName, dataToUpdate: newValue })}
               defaultValue={clientData.lessons_buyed.toString()}
               updateble={updatable}
               type='number'
-              stateName='lessons_buyed' />
+              stateName='lessons_buyed' /> */}
             <ProfileSelector
               statesList={directionsData.map(e => e.name)}
               stateName='direction'
-              value={clientData.direction}
+              value={clientData.Direction.name}
               label='Direction'
               size='medium'
               width={300}
@@ -123,7 +123,7 @@ export const ClientPage: React.FC = () => {
             <ProfileSelector
               statesList={statusData.map(e => e.name)}
               stateName='status'
-              value={clientData.status}
+              value={clientData.Status.name}
               label='Status'
               size='medium'
               updateble={updatable}
@@ -139,7 +139,7 @@ export const ClientPage: React.FC = () => {
                 fullWidth
                 required
                 multiline
-                defaultValue={message}
+                value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 sx={{ backgroundColor: 'white', borderRadius: 3 }}
               />
@@ -152,7 +152,7 @@ export const ClientPage: React.FC = () => {
             </Box>
 
             <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', gap: 3, justifyContent: 'flex-start', mt: 3 }}>
-              {notesData.slice().reverse().map(e=><ClientNote message={e.message} workerid={e.workerid}/>)}
+              {notesData.rows.slice().reverse().map(e=><ClientNote message={e.content} workerid={e.WorkerId}/>)}
             </Box>
 
           </Paper>

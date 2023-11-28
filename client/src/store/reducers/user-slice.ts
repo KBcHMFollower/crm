@@ -1,58 +1,79 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IWorker } from "../../api/interfaces";
-import { fetchLogIn } from "../../api/thunks/userThunks";
+import {  fetchCheckAuth, fetchLogIn } from "../../api/thunks/userThunks";
+import { IUser } from "../../api/models/user-model";
+import { jwtDecode } from "jwt-decode";
 
+
+const resWithToken = (token: string, state: any) =>{
+    localStorage.setItem('token', `Bearer ${token}`)
+    const user:IUser = jwtDecode(token);
+    state.user = user;
+    state.isLoading = false;
+    state.isAuth = true;
+    state.error = '';
+}
 
 type InitialType = {
-    workerInfo:IWorker;
+    user:{
+        id:number,
+        role:string,
+        email: string
+    },
     isAuth:boolean;
     isLoading:boolean;
+    error:string;
 }
 
 const initialState:InitialType = {
-    workerInfo: {
-        id: -1,
-        fname: '',
-        lanme: '',
-        birthday: '',
-        phone: '',
-        email: '',
-        role: '',
-        ratetype: '',
-        rate: 0,
-        login:'',
-        pass:''
+    user: {
+        id:-1,
+        role:'',
+        email: ''
     },
     isAuth: false,
-    isLoading: false
+    isLoading: false,
+    error:''
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUserRole: (state, action: PayloadAction<string>) => {
-            state.workerInfo.role = action.payload;
+        logOut: (state) => {
+            localStorage.clear()
+            state.user.id = -1;
+            state.user.role = '';
+            state.user.email = '';
+            state.isAuth = false;
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchLogIn.fulfilled, (state, action: PayloadAction<IWorker[]>) => {
-                state.workerInfo = action.payload[0];
-                state.isAuth = true;
-                state.isLoading = false;
-                console.log('full');
+            .addCase(fetchLogIn.fulfilled, (state, action) => {
+                resWithToken(action.payload.token, state);
             })
             .addCase(fetchLogIn.pending, (state) => {
                 state.isLoading = true;
-                console.log('pen');
             })
-            .addCase(fetchLogIn.rejected, (state) => {
+            .addCase(fetchLogIn.rejected, (state, action) => {
+                console.log(action.payload);
+                state.isAuth = false;
                 state.isLoading = false;
-                console.log('rej');
+                state.error = action.payload as string;
+            })
+            .addCase(fetchCheckAuth.fulfilled, (state, action) => {
+                resWithToken(action.payload.token, state);
+            })
+            .addCase(fetchCheckAuth.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchCheckAuth.rejected, (state) => {
+                state.isAuth = false;
+                state.isLoading = false;
             })
     }
 })
 
-export const { setUserRole } = userSlice.actions;
+export const { logOut } = userSlice.actions;
 export default userSlice.reducer;

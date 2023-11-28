@@ -179,9 +179,9 @@ class WorkerController {
         pass,
         phone,
         email,
-        birthdayd,
-        roleId,
-        rateTypeId,
+        birthday,
+        role,
+        rateType,
         rate,
       } = req.body;
 
@@ -202,7 +202,7 @@ class WorkerController {
         );
       }
       const findRole = await Role.findOne({
-        where: { id: roleId },
+        where: { name: role },
       });
       if (!findRole) {
         return next(ApiError.badRequest("роли с заданным id не существует"));
@@ -210,7 +210,7 @@ class WorkerController {
 
       //create user
       const hashPass = await bcrypt.hash(pass, 5);
-      const birthday = new Date(); //todo: убарть эту строку
+      const birthdayDate = new Date(birthday); //todo: убарть эту строку
       const worker = await Worker.create({
         fname,
         lname,
@@ -218,13 +218,13 @@ class WorkerController {
         pass: hashPass,
         phone,
         email,
-        birthday,
-        RoleId: roleId,
+        birthday : birthdayDate,
+        RoleId: findRole.id,
       });
 
       //проверка на rateType
       const findRateType = await RateType.findOne({
-        where: { id: rateTypeId },
+        where: { name: rateType },
       });
       if (!findRateType) {
         return next(ApiError.badRequest("роли с таким id не найдено"));
@@ -233,7 +233,7 @@ class WorkerController {
       //create rateType
       const workerRate = await WorkerRate.create({
         WorkerId: worker.id,
-        RateTypeId: rateTypeId,
+        RateTypeId: findRateType.id,
         rate: rate,
       });
 

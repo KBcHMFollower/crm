@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {Container, TextField} from '@mui/material';
 import { Selecter } from '../../components/Selecter/Selecter';
-import { IClientUpdate, useCreateClientMutation, useGetDirectionsQuery, useGetStatusesQuery } from '../../api/api-slices/clients-reducer';
+import { IClientCreate, useCreateClientMutation, useGetDirectionsQuery, useGetStatusesQuery } from '../../api/api-slices/clients-reducer';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -38,14 +38,12 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const doby: IClientUpdate = {
+    const doby: IClientCreate = {
       fname: data.get('fname') as string,
-      lanme: data.get('lname') as string,
+      lname: data.get('lname') as string,
       birthday: data.get('bdate') as string,
       email: data.get('email') as string,
       phone: data.get('number') as string,
-      lessons_buyed: Number(data.get('lessons_buyed') as string),
-      lessons_count: Number(data.get('lessons_count') as string),
       status : status as string,
       direction : direction as string
     }
@@ -92,7 +90,7 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                   }}
                 >
                   <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'space-between', flexBasis: 160 }}>
-                    <TextField
+                    {/* <TextField
                       margin="normal"
                       required
                       id="lessons_count"
@@ -110,7 +108,7 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                       type="number"
                       id="lessons_buyed"
                       sx={{ width: 300 }}
-                    />
+                    /> */}
 
                     <Selecter size='medium' statesList={directionData.map(e => e.name)} value={direction} StateSeter={setDirection} label='Direction' width={300} name='direction' />
 

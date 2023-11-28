@@ -23,13 +23,13 @@ export const ProfilePage: React.FC = () => {
 
   const { userId: idParam } = useParams();
   const { stateId, role} = useAppSelector(state => ({
-    stateId: state.user.workerInfo.id,
-    role: state.user.workerInfo.role,
+    stateId: state.user.user.id,
+    role: state.user.user.role,
   }));
 
 
   const userId = idParam ? +idParam : stateId;
-  const updateble = role === 'admin' || 'manager' ? true : false;
+  const updateble = ((role === 'ADMIN' || 'manager') && (userId !=  stateId)) ? true : false;
 
   const { data: user, isLoading, error } = useFetchGetUserQuery(userId);
 
@@ -48,7 +48,7 @@ export const ProfilePage: React.FC = () => {
             </Button>
 
             <Typography fontSize={20}>
-              {user.fname + ' ' + user.lanme}
+              {user.fname + ' ' + user.lname}
             </Typography>
           </Box>
 
@@ -62,7 +62,7 @@ export const ProfilePage: React.FC = () => {
             />
             <ProfileTextField
             updateble = {updateble}
-            defaultValue={user.lanme}
+            defaultValue={user.lname}
             stateName='lanme'
             lable = 'LastName'
             onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
@@ -92,14 +92,14 @@ export const ProfilePage: React.FC = () => {
             />
             <ProfileTextField
             updateble = {updateble}
-            defaultValue={user.role}
+            defaultValue={user.Role.name}
             stateName='role'
             lable = 'Role'
             onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
             />
             <ProfileTextField
             updateble = {updateble}
-            defaultValue={user.ratetype}
+            defaultValue={user.WorkersRate.RateType.name}
             stateName='ratetype'
             lable = 'RateType'
             onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
@@ -107,7 +107,7 @@ export const ProfilePage: React.FC = () => {
             <ProfileTextField
             updateble = {updateble}
             type='number'
-            defaultValue={user.rate.toString()}
+            defaultValue={user.WorkersRate.rate.toString()}
             stateName='rate'
             lable = 'Rate'
             onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}

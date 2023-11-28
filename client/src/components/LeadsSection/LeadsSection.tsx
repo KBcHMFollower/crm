@@ -27,12 +27,12 @@ export const LeadsSection: FC<PropsType> = ({ status, nextStatus }) => {
                         {status}
                     </Typography>
 
-                    {clients.clients.map(e=>
+                    {clients.rows.map(e=>
                     <LeadCard
-                    clientDirection={e.direction}
+                    clientDirection={e.Direction.name}
                     clientId={e.id}
                     clientName={e.fname}
-                    clientSname={e.lanme}
+                    clientSname={e.lname}
                     goToNextStap={(id:number)=>updateClient({id:id, stateName:'status', dataToUpdate: nextStatus})}
                     />)}
                     {/* <LeadCard

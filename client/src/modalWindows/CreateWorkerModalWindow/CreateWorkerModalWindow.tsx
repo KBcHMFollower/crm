@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {Container, TextField} from '@mui/material';
 import { Selecter } from '../../components/Selecter/Selecter';
-import { IWorkerUpdate, useCreateWorkerMutation } from '../../api/api-slices/workers-page-reducer';
+import { IWorkerCreate, useCreateWorkerMutation, useFetchGetRateTypesQuery, useFetchGetRolesQuery } from '../../api/api-slices/workers-page-reducer';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -24,8 +24,8 @@ type PropsType = {
   setOpen: (props: boolean) => void;
 }
 
-const FormValidate = (data :IWorkerUpdate )=>{
-  if (data.login && data.pass && data.fname && data.lanme && data.birthday && data.email && data.phone && data.ratetype && data.rate && data.role)
+const FormValidate = (data :IWorkerCreate )=>{
+  if (data.login && data.pass && data.fname && data.lname && data.birthday && data.email && data.phone && data.rateType && data.rate && data.role)
     return true;
   return false;
 }
@@ -33,24 +33,26 @@ const FormValidate = (data :IWorkerUpdate )=>{
 export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) => {
 
   const [role,setRole]  =  React.useState('');
+  const [rateType,setRateType]  =  React.useState('');
   const [isWrigth, setIsWrigth] = React.useState(true);
 
-  const  RoleList = ['Teacher', 'Admin'];
+  const {data : RoleList, isLoading : RolesLoading} = useFetchGetRolesQuery(null)
+  const {data : RateTypeList, isLoading : RateTypesLoading} = useFetchGetRateTypesQuery(null)
 
-  const [createWorker,{isLoading}] = useCreateWorkerMutation()
+  const [createWorker,{isLoading : isCreating}] = useCreateWorkerMutation()
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>)=>{
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const doby:IWorkerUpdate = {
+    const doby:IWorkerCreate = {
       login: data.get('login') as string,
       pass: data.get('password') as string,
       fname: data.get('fname') as string,
-      lanme: data.get('lname') as string,
+      lname: data.get('lname') as string,
       birthday: data.get('bdate') as string,
       email: data.get('email') as string,
       phone: data.get('number') as string,
-      ratetype: data.get('rateType') as string,
+      rateType: rateType as string,
       rate: parseFloat(data.get('rate') as string),
       role: role as string,
     }
@@ -64,6 +66,7 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
     }
   }
 
+  const isLoading = RateTypesLoading || RolesLoading || !RateTypeList || !RoleList
   return (
     <div style={{display:'none'}}>
       <Modal
@@ -89,7 +92,13 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                 alignItems: 'center',
               }}
             >
-              <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'space-between', flexBasis: 160 }}>
+              {isLoading ? (
+                <>
+                isLoading...
+                </>
+              ):(
+                <>
+                <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'space-between', flexBasis: 160 }}>
                 <TextField
                   margin="normal"
                   required
@@ -111,7 +120,7 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                   sx={{ width: 300 }}
                 />
 
-                <Selecter size='medium'  statesList={RoleList} value={role} StateSeter={setRole} label='Role' width={300} name='role'/>
+                <Selecter size='medium'  statesList={RoleList.map((e)=>e.name)} value={role} StateSeter={setRole} label='Role' width={300} name='role'/>
 
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', rowGap: 2, flexWrap:'wrap' }}>
                   <TextField
@@ -174,15 +183,7 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                 </Box>
 
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', rowGap: 2, flexWrap:'wrap' }}>
-                  <TextField
-                    margin="normal"
-                    required
-                    name="rateType"
-                    label="Rate Type"
-                    type="text"
-                    id="rateType"
-                    sx={{ width: 300 }}
-                  />
+                <Selecter size='medium'  statesList={RateTypeList.map((e)=>e.name)} value={rateType} StateSeter={setRateType} label='RateType' width={300} name='rateType'/>
 
                   <TextField
                     margin="normal"
@@ -200,11 +201,14 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  disabled={isLoading}
+                  disabled={isLoading || isCreating}
                 >
                   Create
                 </Button>
               </Box>
+                </>
+              )}
+              
             </Box>
           </Container>
         </Box>

@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 
 type PropsType = {
   updateble:boolean;
-  defaultValue:string;
+  defaultValue:string | Date;
   stateName:string;
   lable:string;
   type?:'number' | 'date'
