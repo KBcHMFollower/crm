@@ -26,7 +26,10 @@ class DirectionsController{
                 return next(ApiError.badRequest('Не указано имя роли'))
             }
             const dir = await Direction.create({name})
-            res.json(dir)
+            res.json({
+                id: dir.id,
+                name: dir.name
+            })
         } catch (error) {
             return next(ApiError.badRequest(error.message))
         }

@@ -11,6 +11,33 @@ const findClientAttributes = {
     exclude: ["createdAt", "updatedAt", "StatusId", "DirectionId"],
 };
 
+const createClientRes = async (client)=>{
+  const clientDirectionOb = await client.getDirection()
+      const clientStatusOb = await client.getStatus()
+
+      const clientDirectionRes = {
+        id: clientDirectionOb.id,
+        name: clientDirectionOb.name
+      }
+
+      const clientStatusRes = {
+        id: clientStatusOb.id,
+        name: clientStatusOb.name
+      }
+
+      return clientRes = {
+        id: client.id,
+        lessons_count: client.lessons_count,
+        fname: client.fname,
+        lname: client.lname,
+        email: client.email,
+        phone: client.phone,
+        birthday: client.birthday,
+        Status:{...clientStatusRes},
+        Direction: {...clientDirectionRes}
+      };
+}
+
 class ClientsController {
   async getAll(req, res, next) {
     try {
@@ -132,7 +159,9 @@ class ClientsController {
       client.setStatus(statusOb);
       client.setDirection(directionOb);
 
-      res.json(client);
+      const clientRes = await createClientRes(client)
+
+      res.json(clientRes);
     } catch (error) {
       return next(ApiError.badRequest(error.message));
     }
@@ -187,30 +216,7 @@ class ClientsController {
         await client.setDirection(directionOb)
       }
 
-      const clientDirectionOb = await client.getDirection()
-      const clientStatusOb = await client.getStatus()
-
-      const clientDirectionRes = {
-        id: clientDirectionOb.id,
-        name: clientDirectionOb.name
-      }
-
-      const clientStatusRes = {
-        id: clientStatusOb.id,
-        name: clientStatusOb.name
-      }
-
-      const clientRes = {
-        id: client.id,
-        lessons_count: client.lessons_count,
-        fname: client.fname,
-        lname: client.lname,
-        email: client.email,
-        phone: client.phone,
-        birthday: client.birthday,
-        Status:{...clientStatusRes},
-        Direction: {...clientDirectionRes}
-      };
+      const clientRes = await createClientRes(client)
 
       res.json(clientRes);
     } catch (error) {

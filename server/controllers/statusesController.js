@@ -27,7 +27,10 @@ class StatusesController{
                 return next(ApiError.badRequest('Не указано имя статуса'))
             }
             const status = await Status.create({name})
-            res.json(status)
+            res.json({
+                id: status.id,
+                name: status.name
+            })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }

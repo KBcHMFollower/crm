@@ -27,7 +27,10 @@ class RolesController{
                 return next(ApiError.badRequest('Не указано имя роли'))
             }
             const role = await Role.create({name})
-            res.json(role)
+            res.json({
+                id: role.id,
+                name: role.name
+            })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }

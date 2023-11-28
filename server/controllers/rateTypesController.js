@@ -27,7 +27,10 @@ class RateTypesController{
                 return next(ApiError.badRequest('Не указано имя роли'))
             }
             const rateType = await RateType.create({name})
-        res.json(rateType)
+        res.json({
+            id: rateType.id,
+            name: rateType.name
+        })
         } catch (error) {
             return next(ApiError.badRequest(error.message))
         }

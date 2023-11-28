@@ -29,6 +29,41 @@ const generateJwt = (id, email, role) => {
   );
 };
 
+const createWorkerRes = async (worker)=>{
+      const workerRateOb = await worker.getWorkersRate()
+      const workerRateTypeOb = await workerRateOb.getRateType()
+      const workerRoleOb = await worker.getRole()
+
+      const workerRateRes = {
+        id: workerRateOb.id,
+        rate: workerRateOb.rate,
+        RateType:{
+          id:workerRateTypeOb.id,
+          name:workerRateTypeOb.name
+        }
+      }
+
+      const workerRoleRes = {
+        id: workerRoleOb.id,
+        name: workerRoleOb.name
+      }
+
+      return {
+        id: worker.id,
+        fname: worker.fname,
+        lname: worker.lname,
+        email: worker.email,
+        phone: worker.phone,
+        birthday: worker.birthday,
+        WorkersRate:{
+          ...workerRateRes
+        },
+        Role:{
+          ...workerRoleRes
+        }
+      };
+}
+
 class WorkerController {
   async login(req, res, next) {
     try {
@@ -111,7 +146,6 @@ class WorkerController {
           ...findWorkerAttributes,
         },
       });
-      console.log(JSON.stringify(Workers));
       res.json(Workers);
     } catch (error) {
       return next(ApiError.badRequest(error.message));
@@ -126,35 +160,11 @@ class WorkerController {
       const worker = await Worker.findOne({
         where: {
           id: id,
-        },
-        include: [
-          {
-            model: WorkerRate,
-            include: [
-              {
-                model: RateType,
-                attributes: {
-                  ...findRateTypeAttributes,
-                },
-              },
-            ],
-            attributes: {
-              ...findRateAttributes,
-            },
-          },
-          {
-            model: Role,
-            attributes: {
-              ...findRoleAttributes,
-            },
-          },
-        ],
-        attributes: {
-          ...findWorkerAttributes,
-        },
-      });
+        }})
 
-      res.json(worker);
+      const workerRes = await createWorkerRes(worker)
+
+      res.json(workerRes);
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }
@@ -227,17 +237,9 @@ class WorkerController {
         rate: rate,
       });
 
-      res.json({
-        id: worker.dataValues.id,
-        fname: worker.dataValues.fname,
-        lname: worker.dataValues.lname,
-        phone: worker.dataValues.phone,
-        email: worker.dataValues.email,
-        email: worker.dataValues.birthday,
-        role: findRole.name,
-        rateType: findRateType.name,
-        rate: workerRate.rate,
-      });
+
+      const workerRes = await createWorkerRes(worker)
+      res.json(workerRes);
     } catch (error) {
       return next(ApiError.badRequest(error.message));
     }
@@ -302,37 +304,7 @@ class WorkerController {
         }
       }
 
-      const workerRateTypeOb = await workerRateOb.getRateType()
-      const workerRoleOb = await worker.getRole()
-
-      const workerRateRes = {
-        id: workerRateOb.id,
-        rate: workerRateOb.rate,
-        RateType:{
-          id:workerRateTypeOb.id,
-          name:workerRateTypeOb.name
-        }
-      }
-
-      const workerRoleRes = {
-        id: workerRoleOb.id,
-        name: workerRoleOb.name
-      }
-
-      const workerRes = {
-        id: worker.id,
-        fname: worker.fname,
-        lname: worker.lname,
-        email: worker.email,
-        phone: worker.phone,
-        birthday: worker.birthday,
-        WorkersRate:{
-          ...workerRateRes
-        },
-        Role:{
-          ...workerRoleRes
-        }
-      };
+      const workerRes = await createWorkerRes(worker)
 
       res.json(workerRes);
     } catch (error) {
