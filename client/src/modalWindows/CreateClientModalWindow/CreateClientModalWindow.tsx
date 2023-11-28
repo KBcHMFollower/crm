@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import {Container, TextField} from '@mui/material';
+import { Container, TextField } from '@mui/material';
 import { Selecter } from '../../components/Selecter/Selecter';
 import { IClientCreate, useCreateClientMutation, useGetDirectionsQuery, useGetStatusesQuery } from '../../api/api-slices/clients-reducer';
 
@@ -24,7 +24,7 @@ type PropsType = {
   setOpen: (props: boolean) => void;
 }
 
-export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) => {
+export const CreateClientModalWindow: React.FC<PropsType> = ({ open, setOpen }) => {
 
   const [direction, setDirection] = React.useState('');
   const [status, setStatus] = React.useState('');
@@ -44,10 +44,10 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
       birthday: data.get('bdate') as string,
       email: data.get('email') as string,
       phone: data.get('number') as string,
-      status : status as string,
-      direction : direction as string
+      status: status as string,
+      direction: direction as string
     }
-    if (!Object.values(doby).some(e=>e==='' || null)) {
+    if (!Object.values(doby).some(e => e === '' || null)) {
       setIsWrigth(true);
       console.log(doby);
       await createClient(doby);
@@ -89,30 +89,32 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                     alignItems: 'center',
                   }}
                 >
-                  <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'space-between', flexBasis: 160 }}>
-                    {/* <TextField
-                      margin="normal"
-                      required
-                      id="lessons_count"
-                      label="Lessons Count"
-                      name="lessons_count"
-                      type='number'
-                      autoFocus
-                      sx={{ width: 300 }}
-                    />
-                    <TextField
-                      margin="normal"
-                      required
-                      name="lessons_buyed"
-                      label="Lessons Buyed"
-                      type="number"
-                      id="lessons_buyed"
-                      sx={{ width: 300 }}
-                    /> */}
+                  <Box component="form"
+                    onSubmit={onSubmit}
+                    noValidate
+                    sx={{
+                      mt: 1,
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 1,
+                      justifyContent: 'space-between',
+                      flexBasis: 160
+                    }}>
+                    <Selecter size='medium'
+                      statesList={directionData.map(e => e.name)}
+                      value={direction}
+                      StateSeter={setDirection}
+                      label='Direction'
+                      width={300}
+                      name='direction' />
 
-                    <Selecter size='medium' statesList={directionData.map(e => e.name)} value={direction} StateSeter={setDirection} label='Direction' width={300} name='direction' />
-
-                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', rowGap: 2, flexWrap: 'wrap' }}>
+                    <Box sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      rowGap: 2,
+                      flexWrap: 'wrap'
+                    }}>
                       <TextField
                         margin="normal"
                         required
@@ -148,7 +150,13 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                       />
                     </Box>
 
-                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', rowGap: 2, flexWrap: 'wrap' }}>
+                    <Box sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      rowGap: 2,
+                      flexWrap: 'wrap'
+                    }}>
                       <TextField
                         margin="normal"
                         required
@@ -171,11 +179,22 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
                         sx={{ width: 300 }}
                       />
 
-                      <Selecter size='medium' statesList={statusData.map(e=>e.name)} value={status} StateSeter={setStatus} label='Status' width={300} name='direction' />
+                      <Selecter size='medium'
+                        statesList={statusData.map(e => e.name)}
+                        value={status}
+                        StateSeter={setStatus}
+                        label='Status'
+                        width={300}
+                        name='direction' />
                     </Box>
 
 
-                    <Typography sx={{ display: isWrigth ? 'none' : 'inline' }} color={'red'}>Write value in all place!!!</Typography>
+                    <Typography sx={{
+                      display: isWrigth ? 'none' : 'inline'
+                    }}
+                      color={'red'}>
+                      Write value in all place!!!
+                    </Typography>
                     <Button
                       type="submit"
                       fullWidth

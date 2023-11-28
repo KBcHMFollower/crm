@@ -1,23 +1,32 @@
 import { Paper, Typography } from '@mui/material'
 import { FC } from 'react'
 import { LeadCard } from '../LeadCard/LeadCard'
-import { useGetAllUsersQuery, useGetClientQuery, useUpdateClientMutation } from '../../api/api-slices/clients-reducer'
+import { useGetAllUsersQuery, useUpdateClientMutation } from '../../api/api-slices/clients-reducer'
 
 type PropsType = {
     status: string;
-    nextStatus:string;
+    nextStatus: string;
 }
 
 export const LeadsSection: FC<PropsType> = ({ status, nextStatus }) => {
 
-    const { data: clients, isLoading:isClientsLoading } = useGetAllUsersQuery({ status: status })
-    
-    const [updateClient,{}] = useUpdateClientMutation();
+    const { data: clients, isLoading: isClientsLoading } = useGetAllUsersQuery({ status: status })
 
-    const isLoading  = !clients || isClientsLoading;
+    const [updateClient, { }] = useUpdateClientMutation();
+
+    const isLoading = !clients || isClientsLoading;
 
     return (
-        <Paper elevation={10} sx={{ flex: 1, backgroundColor: '#ADADAD', display: 'flex', flexDirection: 'column', flexWrap: 'wrap', gap: 2, alignItems: 'center', padding: 2 }}>
+        <Paper elevation={10} sx={{
+            flex: 1,
+            backgroundColor: '#ADADAD',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'wrap',
+            gap: 2,
+            alignItems: 'center',
+            padding: 2
+        }}>
             {isLoading ? (
                 <>Loading...</>
             ) : (
@@ -27,20 +36,14 @@ export const LeadsSection: FC<PropsType> = ({ status, nextStatus }) => {
                         {status}
                     </Typography>
 
-                    {clients.rows.map(e=>
-                    <LeadCard
-                    clientDirection={e.Direction.name}
-                    clientId={e.id}
-                    clientName={e.fname}
-                    clientSname={e.lname}
-                    goToNextStap={(id:number)=>updateClient({id:id, stateName:'status', dataToUpdate: nextStatus})}
-                    />)}
-                    {/* <LeadCard
-                clientId={1}
-                clientDirection='asd'
-                clientName='awsdawsd'
-                clientSname='awsdaws'
-                goToNextStap={() => { }} /> */}
+                    {clients.rows.map(e =>
+                        <LeadCard
+                            clientDirection={e.Direction.name}
+                            clientId={e.id}
+                            clientName={e.fname}
+                            clientSname={e.lname}
+                            goToNextStap={(id: number) => updateClient({ id: id, stateName: 'status', dataToUpdate: nextStatus })}
+                        />)}
                 </>
             )}
 

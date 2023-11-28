@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import {Container, TextField} from '@mui/material';
+import { Container, TextField } from '@mui/material';
 import { Selecter } from '../../components/Selecter/Selecter';
 import { IWorkerCreate, useCreateWorkerMutation, useFetchGetRateTypesQuery, useFetchGetRolesQuery } from '../../api/api-slices/workers-page-reducer';
 
@@ -24,27 +24,27 @@ type PropsType = {
   setOpen: (props: boolean) => void;
 }
 
-const FormValidate = (data :IWorkerCreate )=>{
+const FormValidate = (data: IWorkerCreate) => {
   if (data.login && data.pass && data.fname && data.lname && data.birthday && data.email && data.phone && data.rateType && data.rate && data.role)
     return true;
   return false;
 }
 
-export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) => {
+export const CreateWorkerModalWindow: React.FC<PropsType> = ({ open, setOpen }) => {
 
-  const [role,setRole]  =  React.useState('');
-  const [rateType,setRateType]  =  React.useState('');
+  const [role, setRole] = React.useState('');
+  const [rateType, setRateType] = React.useState('');
   const [isWrigth, setIsWrigth] = React.useState(true);
 
-  const {data : RoleList, isLoading : RolesLoading} = useFetchGetRolesQuery(null)
-  const {data : RateTypeList, isLoading : RateTypesLoading} = useFetchGetRateTypesQuery(null)
+  const { data: RoleList, isLoading: RolesLoading } = useFetchGetRolesQuery(null)
+  const { data: RateTypeList, isLoading: RateTypesLoading } = useFetchGetRateTypesQuery(null)
 
-  const [createWorker,{isLoading : isCreating}] = useCreateWorkerMutation()
+  const [createWorker, { isLoading: isCreating }] = useCreateWorkerMutation()
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>)=>{
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const doby:IWorkerCreate = {
+    const doby: IWorkerCreate = {
       login: data.get('login') as string,
       pass: data.get('password') as string,
       fname: data.get('fname') as string,
@@ -56,19 +56,19 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
       rate: parseFloat(data.get('rate') as string),
       role: role as string,
     }
-    if(FormValidate(doby)){
+    if (FormValidate(doby)) {
       setIsWrigth(true);
       await createWorker(doby);
       setOpen(false);
     }
-    else{
+    else {
       setIsWrigth(false);
     }
   }
 
   const isLoading = RateTypesLoading || RolesLoading || !RateTypeList || !RoleList
   return (
-    <div style={{display:'none'}}>
+    <div style={{ display: 'none' }}>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -94,121 +94,166 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({open, setOpen}) =>
             >
               {isLoading ? (
                 <>
-                isLoading...
+                  isLoading...
                 </>
-              ):(
+              ) : (
                 <>
-                <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'space-between', flexBasis: 160 }}>
-                <TextField
-                  margin="normal"
-                  required
-                  id="login"
-                  label="Login"
-                  name="login"
-                  autoComplete="username"
-                  autoFocus
-                  sx={{ width: 300 }}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  sx={{ width: 300 }}
-                />
+                  <Box component="form"
+                    onSubmit={onSubmit}
+                    noValidate
+                    sx={{
+                      mt: 1,
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 1,
+                      justifyContent: 'space-between',
+                      flexBasis: 160
+                    }}>
+                    <TextField
+                      margin="normal"
+                      required
+                      id="login"
+                      label="Login"
+                      name="login"
+                      autoComplete="username"
+                      autoFocus
+                      sx={{ width: 300 }}
+                    />
+                    <TextField
+                      margin="normal"
+                      required
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      sx={{ width: 300 }}
+                    />
 
-                <Selecter size='medium'  statesList={RoleList.map((e)=>e.name)} value={role} StateSeter={setRole} label='Role' width={300} name='role'/>
+                    <Selecter size='medium'
+                      statesList={RoleList.map((e) => e.name)}
+                      value={role}
+                      StateSeter={setRole}
+                      label='Role'
+                      width={300}
+                      name='role' />
 
-                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', rowGap: 2, flexWrap:'wrap' }}>
-                  <TextField
-                    margin="normal"
-                    required
-                    name="fname"
-                    label="First name"
-                    type="name"
-                    id="fname"
-                    autoComplete="given-name"
-                    sx={{ width: 300 }}
-                  />
+                    <Box sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      rowGap: 2,
+                      flexWrap: 'wrap'
+                    }}>
+                      <TextField
+                        margin="normal"
+                        required
+                        name="fname"
+                        label="First name"
+                        type="name"
+                        id="fname"
+                        autoComplete="given-name"
+                        sx={{ width: 300 }}
+                      />
 
-                  <TextField
-                    margin="normal"
-                    required
-                    name="lname"
-                    label="Last name"
-                    type="name"
-                    id="lname"
-                    autoComplete="family-name"
-                    sx={{ width: 300 }}
-                  />
+                      <TextField
+                        margin="normal"
+                        required
+                        name="lname"
+                        label="Last name"
+                        type="name"
+                        id="lname"
+                        autoComplete="family-name"
+                        sx={{ width: 300 }}
+                      />
 
-                  <TextField
-                    margin="normal"
-                    required
-                    name="bdate"
-                    label="BirthdayDate"
-                    type="date"
-                    id="bdate"
-                    autoComplete="bday"
-                    defaultValue={new Date().toISOString().split('T')[0]}
-                    sx={{ width: 300 }}
-                  />
-                </Box>
+                      <TextField
+                        margin="normal"
+                        required
+                        name="bdate"
+                        label="BirthdayDate"
+                        type="date"
+                        id="bdate"
+                        autoComplete="bday"
+                        defaultValue={new Date().toISOString().split('T')[0]}
+                        sx={{ width: 300 }}
+                      />
+                    </Box>
 
-                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', rowGap: 2, flexWrap:'wrap' }}>
-                  <TextField
-                    margin="normal"
-                    required
-                    name="email"
-                    label="Email"
-                    type="email"
-                    id="email"
-                    autoComplete="email"
-                    sx={{ width: 300 }}
-                  />
+                    <Box sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      rowGap: 2,
+                      flexWrap: 'wrap'
+                    }}>
+                      <TextField
+                        margin="normal"
+                        required
+                        name="email"
+                        label="Email"
+                        type="email"
+                        id="email"
+                        autoComplete="email"
+                        sx={{ width: 300 }}
+                      />
 
-                  <TextField
-                    margin="normal"
-                    required
-                    name="number"
-                    label="Phone number"
-                    type="tel"
-                    id="number"
-                    autoComplete="tel"
-                    sx={{ width: 300 }}
-                  />
-                </Box>
+                      <TextField
+                        margin="normal"
+                        required
+                        name="number"
+                        label="Phone number"
+                        type="tel"
+                        id="number"
+                        autoComplete="tel"
+                        sx={{ width: 300 }}
+                      />
+                    </Box>
 
-                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', rowGap: 2, flexWrap:'wrap' }}>
-                <Selecter size='medium'  statesList={RateTypeList.map((e)=>e.name)} value={rateType} StateSeter={setRateType} label='RateType' width={300} name='rateType'/>
+                    <Box sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      rowGap: 2,
+                      flexWrap: 'wrap'
+                    }}>
+                      <Selecter size='medium'
+                        statesList={RateTypeList.map((e) => e.name)}
+                        value={rateType}
+                        StateSeter={setRateType}
+                        label='RateType'
+                        width={300}
+                        name='rateType' />
 
-                  <TextField
-                    margin="normal"
-                    required
-                    name="rate"
-                    label="Rate"
-                    type="number"
-                    id="number"
-                    sx={{ width: 300 }}
-                  />
-                </Box>
-                <Typography sx={{display:isWrigth ? 'none' : 'inline'}} color={'red'}>Write value in all place!!!</Typography>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  disabled={isLoading || isCreating}
-                >
-                  Create
-                </Button>
-              </Box>
+                      <TextField
+                        margin="normal"
+                        required
+                        name="rate"
+                        label="Rate"
+                        type="number"
+                        id="number"
+                        sx={{ width: 300 }}
+                      />
+                    </Box>
+                    <Typography sx={{
+                      display: isWrigth ? 'none' : 'inline'
+                    }}
+                      color={'red'}>
+                      Write value in all place!!!
+                    </Typography>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      disabled={isLoading || isCreating}
+                    >
+                      Create
+                    </Button>
+                  </Box>
                 </>
               )}
-              
+
             </Box>
           </Container>
         </Box>

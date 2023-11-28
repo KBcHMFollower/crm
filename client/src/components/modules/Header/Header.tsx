@@ -12,13 +12,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
-import { useDispatch} from 'react-redux';
-import { FormControl, InputLabel, Paper, Select } from '@mui/material';
 import { logOut } from '../../../store/reducers/user-slice';
 import { useAppDispatch } from '../../../hooks/redux';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 type PropsType = {
   role: string;
@@ -45,7 +41,7 @@ export const Header: React.FC<PropsType> = ({ role }) => {
     setAnchorElUser(null);
   };
 
-  const onLogOutClick = ()=>{
+  const onLogOutClick = () => {
     dispatch(logOut())
   }
 
@@ -72,7 +68,10 @@ export const Header: React.FC<PropsType> = ({ role }) => {
             GoffieSchool
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{
+            flexGrow: 1,
+            display: { xs: 'none', md: 'flex' }
+          }}>
 
             {role !== 'teacher' && (
               <Link to="/workers">

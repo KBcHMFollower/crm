@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import axios, { AxiosError, AxiosInterceptorManager, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import axios, {InternalAxiosRequestConfig } from 'axios';
 
 
 const baseQuery = fetchBaseQuery({

@@ -1,5 +1,7 @@
-import api, { Api } from "../api";
-import { IRateType, IRole, IWorker } from "../interfaces";
+import { Api } from "../api";
+import { IRateType } from "../models/ratetype-model";
+import { IRole } from "../models/role-model";
+import { IWorker } from "../models/worker-model";
 export interface  IWorkerCreate{
   fname: string;
   lname: string;

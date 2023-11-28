@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Paper, Typography } from '@mui/material'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 type PropsType = {
@@ -18,11 +18,18 @@ export const ClientNote: FC<PropsType> = ({ message, workerid }) => {
     return (
         <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
             <Button onClick={onClick}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" sx={{ width: 100, height: 100 }} />
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"
+                    sx={{
+                        width: 100,
+                        height: 100
+                    }} />
             </Button>
             <Box>
                 <Paper elevation={6}
-                    sx={{ maxWidth: 700, padding: 3 }}>
+                    sx={{
+                        maxWidth: 700,
+                        padding: 3
+                    }}>
                     <Typography fontSize={20}
                         sx={{ overflowWrap: 'break-word' }}>
                         {message}

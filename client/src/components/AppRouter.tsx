@@ -1,8 +1,10 @@
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom"
 import SignInPage from "../pages/SignInPage/SignInPage"
 import { HOME_ROUTE, LOGIN_ROUTE } from "../utils/consts"
 import { adminRoutes, anyBodyRoutes, managerRoutes } from "../routes"
-import { LeadsPage } from "../pages/LeadsPage/LeadsPage"
+import { useEffect } from "react"
+import { fetchCheckAuth } from "../api/thunks/userThunks"
+import { useAppDispatch } from "../hooks/redux"
 
 type PropsType = {
     isAuth:boolean,
@@ -11,7 +13,11 @@ type PropsType = {
 
 export const AppRouter: React.FC<PropsType> = ({isAuth, role})=>{
 
-    console.log(role);
+    useEffect(()=>{
+        dispatch(fetchCheckAuth())
+      },[])
+    
+      const dispatch = useAppDispatch()
 
     return(
         <Routes>

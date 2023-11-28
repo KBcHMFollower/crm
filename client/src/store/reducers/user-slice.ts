@@ -1,13 +1,13 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IWorker } from "../../api/interfaces";
+import { createSlice} from "@reduxjs/toolkit";
 import {  fetchCheckAuth, fetchLogIn } from "../../api/thunks/userThunks";
-import { IUser } from "../../api/models/user-model";
+import { ITokenUser } from "../../api/models/user-model";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 
 const resWithToken = (token: string, state: any) =>{
     localStorage.setItem('token', `Bearer ${token}`)
-    const user:IUser = jwtDecode(token);
+    const user:ITokenUser = jwtDecode(token);
     state.user = user;
     state.isLoading = false;
     state.isAuth = true;

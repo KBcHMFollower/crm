@@ -1,4 +1,4 @@
-import { Box, Button, Container, Paper, Typography } from '@mui/material'
+import { Box, Button, Paper, Typography } from '@mui/material'
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
@@ -28,7 +28,7 @@ export const ClientPage: React.FC = () => {
 
   const [message, setMessage] = React.useState('');
 
-  const {workerid, role} = useAppSelector((state=>({workerid: state.user.user.id, role: state.user.user.role})))
+  const { workerid, role } = useAppSelector((state => ({ workerid: state.user.user.id, role: state.user.user.role })))
 
   const { data: clientData, isLoading: isClientLoading } = useGetClientQuery(Number(userId));
   const { data: directionsData, isLoading: isDirectionsLoading } = useGetDirectionsQuery(null);
@@ -36,11 +36,11 @@ export const ClientPage: React.FC = () => {
   const { data: notesData, isLoading: isNotesLoading } = useGetNotesQuery(Number(userId));
 
   const [updateClient, { }] = useUpdateClientMutation();
-  const [createNote,{}] = useCreateNoteMutation()
+  const [createNote, { }] = useCreateNoteMutation()
 
-  const postNote = ()=>{
+  const postNote = () => {
     setMessage('');
-    createNote({workerid:workerid, clientid:Number(userId), content:message});
+    createNote({ workerid: workerid, clientid: Number(userId), content: message });
   }
 
   const updatable = role === 'admin' || 'manager' ? true : false
@@ -52,7 +52,12 @@ export const ClientPage: React.FC = () => {
         <>Loading...</>
       ) : (
         <>
-          <Box sx={{ display: 'flex', my: 1, alignItems: 'center', gap: 5 }}>
+          <Box sx={{
+            display: 'flex',
+            my: 1,
+            alignItems: 'center',
+            gap: 5
+          }}>
             <Button component="label" variant="text">
               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" sx={{ width: 100, height: 100 }} />
               <VisuallyHiddenInput type="file" />
@@ -63,7 +68,16 @@ export const ClientPage: React.FC = () => {
             </Typography>
           </Box>
 
-          <Paper elevation={10} sx={{ backgroundColor: '#B0B0B0', display: 'flex', my: 5, alignItems: 'center', gap: 5, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <Paper elevation={10}
+            sx={{
+              backgroundColor: '#B0B0B0',
+              display: 'flex',
+              my: 5,
+              alignItems: 'center',
+              gap: 5,
+              flexWrap: 'wrap',
+              justifyContent: 'space-between'
+            }}>
             <ProfileTextField
               lable='FirstName'
               onBlurCall={(stateName: string, newValue: string) => updateClient({ id: userId, stateName: stateName, dataToUpdate: newValue })}
@@ -81,7 +95,7 @@ export const ClientPage: React.FC = () => {
               onBlurCall={(stateName: string, newValue: string) => updateClient({ id: userId, stateName: stateName, dataToUpdate: newValue })}
               defaultValue={clientData.birthday}
               updateble={updatable}
-              type = 'date'
+              type='date'
               stateName='birthday' />
             <ProfileTextField
               lable='Phone'
@@ -103,13 +117,6 @@ export const ClientPage: React.FC = () => {
               type='number'
               updateble={updatable}
               stateName='lessons_count' />
-            {/* <ProfileTextField
-              lable='Lessons buyed'
-              onBlurCall={(stateName: string, newValue: string) => updateClient({ id: userId, stateName: stateName, dataToUpdate: newValue })}
-              defaultValue={clientData.lessons_buyed.toString()}
-              updateble={updatable}
-              type='number'
-              stateName='lessons_buyed' /> */}
             <ProfileSelector
               statesList={directionsData.map(e => e.name)}
               stateName='direction'
@@ -132,7 +139,11 @@ export const ClientPage: React.FC = () => {
             />
           </Paper>
 
-          <Paper elevation={10} sx={{ backgroundColor: '#969696', padding: 2 }}>
+          <Paper elevation={10}
+            sx={{
+              backgroundColor: '#969696',
+              padding: 2
+            }}>
             <Typography variant='h6'>Notes</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
@@ -151,8 +162,15 @@ export const ClientPage: React.FC = () => {
               </Button>
             </Box>
 
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', gap: 3, justifyContent: 'flex-start', mt: 3 }}>
-              {notesData.rows.slice().reverse().map(e=><ClientNote message={e.content} workerid={e.WorkerId}/>)}
+            <Box sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              gap: 3,
+              justifyContent: 'flex-start',
+              mt: 3
+            }}>
+              {notesData.rows.slice().reverse().map(e => <ClientNote message={e.content} workerid={e.WorkerId} />)}
             </Box>
 
           </Paper>

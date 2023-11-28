@@ -22,18 +22,18 @@ const VisuallyHiddenInput = styled('input')({
 export const ProfilePage: React.FC = () => {
 
   const { userId: idParam } = useParams();
-  const { stateId, role} = useAppSelector(state => ({
+  const { stateId, role } = useAppSelector(state => ({
     stateId: state.user.user.id,
     role: state.user.user.role,
   }));
 
 
   const userId = idParam ? +idParam : stateId;
-  const updateble = ((role === 'ADMIN' || 'manager') && (userId !=  stateId)) ? true : false;
+  const updateble = ((role === 'ADMIN' || 'manager') && (userId != stateId)) ? true : false;
 
   const { data: user, isLoading, error } = useFetchGetUserQuery(userId);
 
-  const [updateWorker,{}] = workersApi.useUpdateWorkerMutation();
+  const [updateWorker, { }] = workersApi.useUpdateWorkerMutation();
 
   return (
     <Box sx={{ minHeight: 1000 }}>
@@ -41,9 +41,18 @@ export const ProfilePage: React.FC = () => {
         <div>Loading...</div>
       ) : (
         <>
-          <Box sx={{ display: 'flex', my: 1, alignItems: 'center', gap: 5 }}>
+          <Box sx={{
+            display: 'flex',
+            my: 1,
+            alignItems: 'center',
+            gap: 5
+          }}>
             <Button component="label" variant="text">
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" sx={{ width: 100, height: 100 }} />
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"
+                sx={{
+                  width: 100,
+                  height: 100
+                }} />
               <VisuallyHiddenInput type="file" />
             </Button>
 
@@ -52,65 +61,74 @@ export const ProfilePage: React.FC = () => {
             </Typography>
           </Box>
 
-          <Paper elevation={10} sx={{backgroundColor:'#B0B0B0', display: 'flex', my: 5, alignItems: 'center', gap: 5, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <Paper elevation={10}
+            sx={{
+              backgroundColor: '#B0B0B0',
+              display: 'flex',
+              my: 5,
+              alignItems: 'center',
+              gap: 5,
+              flexWrap: 'wrap',
+              justifyContent: 'space-between'
+            }}>
             <ProfileTextField
-            updateble = {updateble}
-            defaultValue={user.fname}
-            stateName='fname'
-            lable = 'FirstName'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              defaultValue={user.fname}
+              stateName='fname'
+              lable='FirstName'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
             <ProfileTextField
-            updateble = {updateble}
-            defaultValue={user.lname}
-            stateName='lanme'
-            lable = 'LastName'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              defaultValue={user.lname}
+              stateName='lanme'
+              lable='LastName'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
             <ProfileTextField
-            updateble = {updateble}
-            defaultValue={user.birthday}
-            stateName='birthday'
-            type='date'
-            lable = 'Birthday'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              defaultValue={user.birthday}
+              stateName='birthday'
+              type='date'
+              lable='Birthday'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
             <ProfileTextField
-            updateble = {updateble}
-            defaultValue={user.phone}
-            stateName='phone'
-            type='number'
-            lable = 'Phone'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              defaultValue={user.phone}
+              stateName='phone'
+              type='number'
+              lable='Phone'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
             <ProfileTextField
-            updateble = {updateble}
-            defaultValue={user.email}
-            stateName='email'
-            lable = 'Email'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              defaultValue={user.email}
+              stateName='email'
+              lable='Email'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
             <ProfileTextField
-            updateble = {updateble}
-            defaultValue={user.Role.name}
-            stateName='role'
-            lable = 'Role'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              defaultValue={user.Role.name}
+              stateName='role'
+              lable='Role'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
             <ProfileTextField
-            updateble = {updateble}
-            defaultValue={user.WorkersRate.RateType.name}
-            stateName='ratetype'
-            lable = 'RateType'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              defaultValue={user.WorkersRate.RateType.name}
+              stateName='ratetype'
+              lable='RateType'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
             <ProfileTextField
-            updateble = {updateble}
-            type='number'
-            defaultValue={user.WorkersRate.rate.toString()}
-            stateName='rate'
-            lable = 'Rate'
-            onBlurCall={(stateName:string, newValue:string)=>updateWorker({id:Number(userId), stateName:stateName, dataToUpdate:newValue})}
+              updateble={updateble}
+              type='number'
+              defaultValue={user.WorkersRate.rate.toString()}
+              stateName='rate'
+              lable='Rate'
+              onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />
           </Paper>
         </>

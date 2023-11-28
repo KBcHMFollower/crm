@@ -1,5 +1,8 @@
-import { IClient, IDirection, INote, IRateType, IRole, IStatus, IWorker } from '../interfaces';
 import Api from '../api';
+import { IClient } from '../models/client-model';
+import { IDirection } from '../models/direction-model';
+import { INote } from '../models/note-model';
+import { IStatus } from '../models/status-model';
 
 export interface IClientCreate{
     direction: string;
