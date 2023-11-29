@@ -11,5 +11,6 @@ router.get('/auth', authMiddleware, workersController.check)
 router.get('/', workersController.getAll)
 router.get('/:id', workersController.getOne)
 router.put('/:id', workersController.update)
+router.delete('/:id', workersController.delete)
 
 module.exports = router

@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom"
+import { Navigate, Route, Routes} from "react-router-dom"
 import SignInPage from "../pages/SignInPage/SignInPage"
 import { HOME_ROUTE, LOGIN_ROUTE } from "../utils/consts"
 import { adminRoutes, anyBodyRoutes, managerRoutes } from "../routes"

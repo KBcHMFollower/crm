@@ -161,6 +161,8 @@ class WorkerController {
         where: {
           id: id,
         }})
+      
+        if (!worker) return next(ApiError.badRequest("нет worker с заданным id"));
 
       const workerRes = await createWorkerRes(worker)
 
@@ -311,6 +313,30 @@ class WorkerController {
       return next(ApiError.badRequest(error.message));
     }
   }
+
+  async delete(req, res,next){
+    try {
+      const {id} = req.params
+
+      if (!id) return next(ApiError.badRequest('не указан id'))
+
+      const worker = await Worker.findOne({
+        where:{id:id}
+      })
+      if (!worker) return next(ApiError.badRequest('нет работника с заданным id'))
+
+      const WorkerRate = await worker.getWorkersRate()
+      if (WorkerRate) await WorkerRate.destroy()
+
+      
+      const deleteWorker = await worker.destroy()
+
+      res.json(deleteWorker)
+    } catch (error) {
+      return next(ApiError.badRequest(error.message))
+    }
+  }
+  
 }
 
 module.exports = new WorkerController();

@@ -223,6 +223,23 @@ class ClientsController {
       return next(ApiError.badRequest(error.message));
     }
   }
+
+//   async delete(req, res, next){
+//     try {
+//       const {id} = req.params
+//       if (!id) return next(ApiError.badRequest("не задан id"))
+
+//       const client = Client.findOne({
+//         where:{id:id}
+//       })
+//       if (!client) return next(ApiError.badRequest("нет клиента с заданным id"))
+
+//       res.json(deletedCl)
+
+//     } catch (error) {
+//       return next(ApiError.badRequest(error.message))
+//     }
+//   }
 }
 
 module.exports = new ClientsController();
