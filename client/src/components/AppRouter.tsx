@@ -1,17 +1,18 @@
 import { Navigate, Route, Routes} from "react-router-dom"
 import SignInPage from "../pages/SignInPage/SignInPage"
-import { HOME_ROUTE, LOGIN_ROUTE } from "../utils/consts"
-import { adminRoutes, anyBodyRoutes, managerRoutes } from "../routes"
+import { HOME_ROUTE, LOGIN_ROUTE } from "../utils/route-consts"
+import { adminRoutes, anybodyRoutes, cleitnSectionRoutes, leadsSectionRoutes, workerSectionRoutes} from "../routes"
 import { useEffect } from "react"
 import { fetchCheckAuth } from "../api/thunks/userThunks"
 import { useAppDispatch } from "../hooks/redux"
+import { ADMIN, CLIENTS_SECTION, LEADS_SECTION, WORKERS_SECTION, checkRights } from "../utils/rights-utils"
 
 type PropsType = {
     isAuth:boolean,
-    role:string
+    rights:string[]
 }
 
-export const AppRouter: React.FC<PropsType> = ({isAuth, role})=>{
+export const AppRouter: React.FC<PropsType> = ({isAuth, rights})=>{
 
     useEffect(()=>{
         dispatch(fetchCheckAuth())
@@ -28,17 +29,27 @@ export const AppRouter: React.FC<PropsType> = ({isAuth, role})=>{
                 </>
             ) :  (
                 <>
-                    {role === "ADMIN" && (
+                    {checkRights(rights, ADMIN) && (
                         <>
-                            {adminRoutes.map((e)=><Route path={e.path} Component={e.element}/>)}
+                            {adminRoutes.map((e)=><Route key={e.path} path={e.path} Component={e.element}/>)}
                         </>
                     )}
-                    {(role === "ADMIN" || "manager") && (
+                    {checkRights(rights, CLIENTS_SECTION) && (
                         <>
-                            {managerRoutes.map((e)=><Route path={e.path} Component={e.element}/>)}
+                            {cleitnSectionRoutes.map((e)=><Route key={e.path} path={e.path} Component={e.element}/>)}
                         </>
                     )}
-                    {anyBodyRoutes.map((e)=><Route path={e.path} Component={e.element}/>)}
+                    {checkRights(rights, WORKERS_SECTION) && (
+                        <>
+                            {workerSectionRoutes.map((e)=><Route key={e.path} path={e.path} Component={e.element}/>)}
+                        </>
+                    )}
+                    {checkRights(rights, LEADS_SECTION) && (
+                        <>
+                            {leadsSectionRoutes.map((e)=><Route key={e.path} path={e.path} Component={e.element}/>)}
+                        </>
+                    )}
+                    {anybodyRoutes.map((e)=><Route key={e.path} path={e.path} Component={e.element}/>)}
                     <Route path='*' element={<Navigate to={HOME_ROUTE} replace />} />
                 </>
             )}

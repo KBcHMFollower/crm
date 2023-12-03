@@ -1,5 +1,6 @@
 export interface ITokenUser{
     id:number,
+    rights:string[]
     role:string,
     email:string
 }

@@ -6,6 +6,7 @@ import workersApi, { useFetchGetUserQuery } from '../../api/api-slices/workers-p
 import { useAppSelector } from '../../hooks/redux';
 import { useParams } from 'react-router-dom';
 import { ProfileTextField } from '../../components/ProfileTextField/ProfileTextField';
+import { UPDATE_WORKER, checkRights } from '../../utils/rights-utils';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -22,14 +23,14 @@ const VisuallyHiddenInput = styled('input')({
 export const ProfilePage: React.FC = () => {
 
   const { userId: idParam } = useParams();
-  const { stateId, role } = useAppSelector(state => ({
+  const { stateId, rights } = useAppSelector(state => ({
     stateId: state.user.user.id,
-    role: state.user.user.role,
+    rights: state.user.user.rights,
   }));
 
 
   const userId = idParam ? +idParam : stateId;
-  const updateble = ((role === 'ADMIN' || 'manager') && (userId != stateId)) ? true : false;
+  const updateble = (checkRights(rights, UPDATE_WORKER) && (userId != stateId)) ? true : false;
 
   const { data: user, isLoading, error } = useFetchGetUserQuery(userId);
 

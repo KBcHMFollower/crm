@@ -9,6 +9,7 @@ import { useCreateNoteMutation, useGetClientQuery, useGetDirectionsQuery, useGet
 import { ProfileSelector } from '../../components/ProfileSelector/ProfileSelecter';
 import TextField from '@mui/material/TextField';
 import { ClientNote } from '../../components/ClientNote/ClientNote';
+import { CREATE_NOTE, UPDATE_WORKER, checkRights } from '../../utils/rights-utils';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -28,7 +29,7 @@ export const ClientPage: React.FC = () => {
 
   const [message, setMessage] = React.useState('');
 
-  const { workerid, role } = useAppSelector((state => ({ workerid: state.user.user.id, role: state.user.user.role })))
+  const { workerid, rights } = useAppSelector((state => ({ workerid: state.user.user.id, rights: state.user.user.rights })))
 
   const { data: clientData, isLoading: isClientLoading } = useGetClientQuery(Number(userId));
   const { data: directionsData, isLoading: isDirectionsLoading } = useGetDirectionsQuery(null);
@@ -43,7 +44,8 @@ export const ClientPage: React.FC = () => {
     createNote({ workerid: workerid, clientid: Number(userId), content: message });
   }
 
-  const updatable = role === 'admin' || 'manager' ? true : false
+  const updatable = checkRights(rights, UPDATE_WORKER);
+  const canCreateNotes = checkRights(rights, CREATE_NOTE);
   const isLoading = !notesData || isNotesLoading || !clientData || !directionsData || !statusData || isClientLoading || isDirectionsLoading || isStatusLoading
 
   return (
@@ -147,6 +149,7 @@ export const ClientPage: React.FC = () => {
             <Typography variant='h6'>Notes</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
+                disabled={!canCreateNotes}
                 fullWidth
                 required
                 multiline
@@ -156,6 +159,7 @@ export const ClientPage: React.FC = () => {
               />
 
               <Button onClick={postNote}
+                disabled={!canCreateNotes}
                 variant='contained'
               >
                 send

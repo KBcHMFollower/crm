@@ -4,6 +4,8 @@ import { Selecter } from '../../components/Selecter/Selecter';
 import { ClientCard } from '../../components/ClientCard/ClientCard';
 import { useGetAllUsersQuery, useGetDirectionsQuery, useGetStatusesQuery } from '../../api/api-slices/clients-reducer';
 import { CreateClientModalWindow } from '../../modalWindows/CreateClientModalWindow/CreateClientModalWindow';
+import { CREATE_CLIENT, checkRights } from '../../utils/rights-utils';
+import { useAppSelector } from '../../hooks/redux';
 
 export const ClientsPage = () => {
 
@@ -19,6 +21,10 @@ export const ClientsPage = () => {
     const { data: directionsData, isLoading: isDirectionsLoading } = useGetDirectionsQuery(null);
     const { data: statusData, isLoading: isStatusLoading } = useGetStatusesQuery(null);
 
+    const rights = useAppSelector(state=>state.user.user.rights);
+
+
+    const canCreateClient = checkRights(rights, CREATE_CLIENT);
     const isLoading = !statusData || !clientsData || !directionsData || isStatusLoading || isDirectionsLoading || isClientsLoading;
 
     return (
@@ -58,7 +64,12 @@ export const ClientsPage = () => {
                                     StateSeter={setStatus}
                                     label='Status' />
                             </Box>
-                            <Button onClick={() => setWorkersModalOpen(true)} sx={{ height: 50 }} variant='contained'>Add client</Button>
+                            <Button onClick={() => setWorkersModalOpen(true)}
+                             sx={{ height: 50 }}
+                             disabled={!canCreateClient} 
+                             variant='contained'>
+                                Add client
+                                </Button>
                         </Box>
 
                         <Box sx={{

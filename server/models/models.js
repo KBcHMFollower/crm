@@ -24,6 +24,15 @@ const Role = sequelize.define('Roles', {
     name:{type:DataTypes.STRING, unique:true},
 })
 
+const Right = sequelize.define('Rights', {
+    id:{type:DataTypes.INTEGER, primaryKey:true, autoIncrement:true},
+    name:{type:DataTypes.STRING, unique:true},
+})
+
+const RolesAndRight = sequelize.define('RolesAndRights', {
+    id:{type:DataTypes.INTEGER, primaryKey:true, autoIncrement:true},
+})
+
 const WorkerRate = sequelize.define('WorkersRate', {
     rate:{type:DataTypes.INTEGER},
 })
@@ -74,6 +83,9 @@ WorkerRate.belongsTo(Worker)
 Role.hasMany(Worker)
 Worker.belongsTo(Role)
 
+Role.belongsToMany(Right, {through: RolesAndRight})
+Right.belongsToMany(Role, {through: RolesAndRight})
+
 //Note
 Worker.hasMany(Note)
 Note.belongsTo(Worker)
@@ -100,5 +112,7 @@ module.exports = {
     Status,
     Direction,
     Note,
-    Deal
+    Deal,
+    Right,
+    RolesAndRight
 }

@@ -7,6 +7,8 @@ const notesRouter = require('./notesRouter')
 const rateTypesRouter = require('./rateTypesRouter')
 const rolesRouter = require('./rolesRouter')
 const statusesRouter = require('./statusesRouter')
+const rightsRouter = require('./rightsRouter')
+const initialRoute = require('./initialRoute')
 
 const router = new Router()
 
@@ -18,5 +20,7 @@ router.use('/notes', notesRouter)
 router.use('/ratetypes', rateTypesRouter)
 router.use('/roles', rolesRouter)
 router.use('/statuses', statusesRouter)
+router.use('/rights', rightsRouter)
+router.use('/initial', initialRoute)
 
 module.exports = router

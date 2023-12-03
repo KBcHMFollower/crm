@@ -1,5 +1,5 @@
 const ApiError = require("../errors/ApiError");
-const { WorkerRate, Worker, RateType, Role } = require("../models/models");
+const { WorkerRate, Worker, RateType, Role, Right } = require("../models/models");
 const bcrypt = require("bcrypt");
 const { Op, where } = require("sequelize");
 const jwt = require("jsonwebtoken");
@@ -17,12 +17,13 @@ const findRateTypeAttributes = {
   exclude: ["createdAt", "updatedAt"],
 };
 
-const generateJwt = (id, email, role) => {
+const generateJwt = (id, email, role, rights) => {
   return jwt.sign(
     {
       id: id,
       email: email,
       role: role,
+      rights: rights
     },
     process.env.SECRET_KEY,
     { expiresIn: "24h" }
@@ -83,10 +84,18 @@ class WorkerController {
 
       const role = await Role.findOne({
         where: { id: user.RoleId },
+        include: [
+          {model:Right,
+            attributes:{
+              exclude:["id", "createdAt","updatedAt"]
+            },
+          through:{attributes:[]}}
+        ]
       });
 
+
       //token
-      const token = generateJwt(user.id, user.email, role.name);
+      const token = generateJwt(user.id, user.email, role.name, role.Rights.map(e=>e.name));
 
       res.json({ token });
     } catch (error) {
@@ -96,7 +105,7 @@ class WorkerController {
 
   async check(req, res, next) {
     try {
-      const token = generateJwt(req.user.id, req.user.email, req.user.role);
+      const token = generateJwt(req.user.id, req.user.email, req.user.role, req.user.rights);
       res.json({ token });
     } catch (error) {
       next(ApiError.badRequest(error.message));
@@ -193,10 +202,11 @@ class WorkerController {
       }
       const candidate = await Worker.findOne({
         where: {
-          [Op.or]: [{ login: login }, { pass: pass }, { email: email }],
+          [Op.or]: [{ login: login }, { phone: phone }, { email: email }],
         },
       });
       if (candidate) {
+        console.log(candidate)
         return next(
           ApiError.badRequest(
             "пользователь с таким логином, емаилом или телефоном уже существует"

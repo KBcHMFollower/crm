@@ -14,13 +14,14 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
 import { logOut } from '../../../store/reducers/user-slice';
 import { useAppDispatch } from '../../../hooks/redux';
+import { ADMIN, CLIENTS_SECTION, LEADS_SECTION, WORKERS_SECTION, checkRights } from '../../../utils/rights-utils';
 
 
 type PropsType = {
-  role: string;
+  rights: string[];
 }
 
-export const Header: React.FC<PropsType> = ({ role }) => {
+export const Header: React.FC<PropsType> = ({ rights }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -73,7 +74,7 @@ export const Header: React.FC<PropsType> = ({ role }) => {
             display: { xs: 'none', md: 'flex' }
           }}>
 
-            {role !== 'teacher' && (
+            {checkRights(rights, WORKERS_SECTION) && (
               <Link to="/workers">
                 <Button
                   onClick={handleCloseNavMenu}
@@ -84,7 +85,8 @@ export const Header: React.FC<PropsType> = ({ role }) => {
               </Link>
             )}
 
-            <Link to="/clients">
+            {checkRights(rights, CLIENTS_SECTION) && (
+              <Link to="/clients">
               <Button
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
@@ -92,8 +94,9 @@ export const Header: React.FC<PropsType> = ({ role }) => {
                 Clients
               </Button>
             </Link>
+            )}
 
-            {role !== 'teacher' && (
+            {checkRights(rights, LEADS_SECTION) && (
               <Link to="/leads">
                 <Button
                   onClick={handleCloseNavMenu}
@@ -104,7 +107,7 @@ export const Header: React.FC<PropsType> = ({ role }) => {
               </Link>
             )}
 
-            {role === 'ADMIN' && (
+            {checkRights(rights, ADMIN) && (
               <Link to="/roles">
                 <Button
                   onClick={handleCloseNavMenu}

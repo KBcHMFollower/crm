@@ -18,7 +18,8 @@ type InitialType = {
     user:{
         id:number,
         role:string,
-        email: string
+        email: string,
+        rights:string[]
     },
     isAuth:boolean;
     isLoading:boolean;
@@ -29,7 +30,8 @@ const initialState:InitialType = {
     user: {
         id:-1,
         role:'',
-        email: ''
+        email: '',
+        rights:[]
     },
     isAuth: false,
     isLoading: false,
@@ -45,6 +47,7 @@ const userSlice = createSlice({
             state.user.id = -1;
             state.user.role = '';
             state.user.email = '';
+            state.user.rights = [];
             state.isAuth = false;
         }
     },

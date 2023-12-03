@@ -29,6 +29,7 @@ export const workersApi = Api.injectEndpoints({
     }),
     fetchGetRoles: builder.query<IRole[], null>({
       query: () => `/roles`, // Замените на действительный URL
+      providesTags: result=>['Roles'] // Замените на действительный URL
     }),
     fetchGetRateTypes: builder.query<IRateType[], null>({
       query: () => `/ratetypes`, // Замените на действительный URL

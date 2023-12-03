@@ -5,6 +5,7 @@ import { Selecter } from '../../components/Selecter/Selecter';
 import { CreateWorkerModalWindow } from '../../modalWindows/CreateWorkerModalWindow/CreateWorkerModalWindow';
 import { useFetchAllWorkersQuery, useFetchGetRolesQuery } from '../../api/api-slices/workers-page-reducer';
 import { useAppSelector } from '../../hooks/redux';
+import { CREATE_WORKER, checkRights } from '../../utils/rights-utils';
 
 export const WorkersPage: FC = () => {
 
@@ -14,16 +15,14 @@ export const WorkersPage: FC = () => {
     const [role, setRole] = useState('');
     const [page, setPage] = useState(1);
 
-    const userRole = useAppSelector(state => state.user.user.role)
+    const userRights = useAppSelector(state => state.user.user.rights)
 
     const { data: WorkersData, error: WorkersError, isLoading: isWorkersLoading } = useFetchAllWorkersQuery({ limit: limit, page: page, role: role });
     const { data: RolesData, error: RolesError, isLoading: isRolesLoading } = useFetchGetRolesQuery(null);
 
     const [workersModalOpen, setWorkersModalOpen] = useState(false);
 
-
-
-
+    const canCreateWorker = checkRights(userRights, CREATE_WORKER)
     const isLoading = isRolesLoading || isWorkersLoading || !WorkersData || !RolesData;
     return (
         <Box sx={{
@@ -58,7 +57,7 @@ export const WorkersPage: FC = () => {
                                     StateSeter={setRole}
                                     label='Role' />
                             </Box>
-                            {userRole === "ADMIN" && (
+                            {canCreateWorker && (
                                 <Button onClick={() => setWorkersModalOpen(true)} sx={{ height: 50 }} variant='contained'>Add worker</Button>
                             )}
 
