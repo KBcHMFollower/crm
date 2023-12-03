@@ -11,20 +11,24 @@ export const RolesPage: React.FC = () => {
     const [workersModalOpen, setWorkersModalOpen] = useState(false);
 
 
-    const { data: RolesData, isLoading: RolesLoading } = rolesApi.useGetAllRolesQuery(null)
+    const { data: RolesData, isLoading: RolesLoading } = rolesApi.useGetAllRolesQuery({name:findName})
     const {data:RightsData, isLoading: RightsLoading} = rolesApi.useGetAllRightsQuery(null);
+
     const [deleteRoleRight] = rolesApi.useDeleteRoleRightMutation()
     const [addRoleRight] = rolesApi.useAddRoleRightMutation()
+    const [deleteRole] = rolesApi.useDeleteRoleMutation()
 
-    // addRoleRight({roleName:'teacher', rightName:'leads-section'})
     const onAddRight = (roleName: string, rightName:string) =>{
         addRoleRight({roleName:roleName, rightName:rightName});
-    }
+    };
 
     const ondeleteRight = (roleName: string, rightName:string) =>{
         deleteRoleRight({roleName:roleName, rightName:rightName});
-    }
+    };
 
+    const onDeleteRole = (id:number)=>{
+        deleteRole(id);
+    };
 
     return (
         <Box sx={{
@@ -48,9 +52,19 @@ export const RolesPage: React.FC = () => {
                             <Box sx={{
                                 display: 'flex', gap: 1, flexWrap: 'wrap'
                             }}>
-                                <TextField value={findName} onChange={(e) => setFindName(e.target.value)} id='searcher' label='Write name..' variant='filled' sx={{ backgroundColor: 'white' }} />
+                                <TextField 
+                                value={findName} 
+                                onChange={(e) => setFindName(e.target.value)}
+                                 id='searcher'
+                                  label='Write name..'
+                                   variant='filled'
+                                    sx={{ backgroundColor: 'white' }} />
                             </Box>
-                            <Button onClick={() => setWorkersModalOpen(true)} sx={{ height: 50 }} variant='contained'>Add Role</Button>
+                            <Button onClick={() => setWorkersModalOpen(true)} 
+                            sx={{ height: 50 }} 
+                            variant='contained'>
+                                Add Role
+                                </Button>
                         </Box>
 
                         <Box sx={{
@@ -63,7 +77,8 @@ export const RolesPage: React.FC = () => {
                             key={e.id}
                              allRights={RightsData}
                              addRight={onAddRight}
-                             deleteRight={ondeleteRight} />)}
+                             deleteRight={ondeleteRight}
+                             deleteRole={onDeleteRole} />)}
                         </Box>
                     </Box>
                     <Box sx={{

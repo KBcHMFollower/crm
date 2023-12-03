@@ -18,7 +18,7 @@ export const AppRouter: React.FC<PropsType> = ({isAuth, rights})=>{
         dispatch(fetchCheckAuth())
       },[])
     
-      const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch()
 
     return(
         <Routes>

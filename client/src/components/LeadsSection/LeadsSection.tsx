@@ -6,13 +6,12 @@ import { useGetAllUsersQuery, useUpdateClientMutation } from '../../api/api-slic
 type PropsType = {
     status: string;
     nextStatus: string;
+    updateClient: (id: number, stateName: string, dataToUpdate: string) => void;
 }
 
-export const LeadsSection: FC<PropsType> = ({ status, nextStatus }) => {
+export const LeadsSection: FC<PropsType> = ({ status, nextStatus, updateClient }) => {
 
     const { data: clients, isLoading: isClientsLoading } = useGetAllUsersQuery({ status: status })
-
-    const [updateClient, { }] = useUpdateClientMutation();
 
     const isLoading = !clients || isClientsLoading;
 
@@ -38,11 +37,12 @@ export const LeadsSection: FC<PropsType> = ({ status, nextStatus }) => {
 
                     {clients.rows.map(e =>
                         <LeadCard
+                            key={e.id}
                             clientDirection={e.Direction.name}
                             clientId={e.id}
                             clientName={e.fname}
                             clientSname={e.lname}
-                            goToNextStap={(id: number) => updateClient({ id: id, stateName: 'status', dataToUpdate: nextStatus })}
+                            goToNextStap={(id: number) => updateClient(id, 'status', nextStatus)}
                         />)}
                 </>
             )}

@@ -21,7 +21,9 @@ const defaultTheme = createTheme();
 export default function SignInPage() {
 
   const dispatch = useAppDispatch();
+
   const navigate = useNavigate();
+
   const {isAuth,isLoading, error} = useAppSelector(state=>
     ({isAuth: state.user.isAuth, 
     isLoading:state.user.isLoading,
@@ -34,8 +36,7 @@ export default function SignInPage() {
       login: data.get('login') as string,
       pass: data.get('password') as string,
     }
-
-
+    
     if (!Object.values(body).some(e=>e === '' || null)){
         dispatch(fetchLogIn(body));
     }

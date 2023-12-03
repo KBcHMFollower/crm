@@ -9,8 +9,6 @@ function App() {
 
   const { rights, isAuth } = useAppSelector(state => ({ rights: state.user.user.rights, isAuth: state.user.isAuth }));
 
-
-
   const location = window.location
 
   return (

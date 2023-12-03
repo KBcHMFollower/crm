@@ -15,12 +15,12 @@ type PropsType = {
 
 export const WorkerCard: FC<PropsType> = ({ workerId, workerName, workerRate, workerRateType, workerRole, workerSname }) => {
 
-
     const navigate = useNavigate();
 
     const onClick = () => {
         navigate(`/profile/${workerId}`)
     }
+    
     return (
         <Button onClick={onClick} variant='text' sx={{ textTransform: 'none' }}>
             <Paper elevation={5} sx={{

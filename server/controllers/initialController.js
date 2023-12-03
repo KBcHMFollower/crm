@@ -38,6 +38,7 @@ class ItinialController{
         const updateWorkerR = await Right.create({name: 'update-worker'})
         const updateClientR = await Right.create({name: 'update-client'})
         const createNoteR = await Right.create({name: 'create-note'})
+        const deleteWorkers = await Right.create({name: 'delete-worker'})
 
         //роли
         const admin =  await Role.create({name: 'ADMIN'})

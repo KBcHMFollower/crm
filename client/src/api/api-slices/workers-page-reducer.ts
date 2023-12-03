@@ -16,23 +16,24 @@ export interface  IWorkerCreate{
 }
 export const workersApi = Api.injectEndpoints({
   endpoints:(builder) => ({
-    fetchAllWorkers: builder.query<{count:number,rows: IWorker[]}, { limit?: number; page?: number; role?: string;}>({
-      query: ({ limit = 1, page = 1, role = ''}) => {
+    fetchAllWorkers: builder.query<{count:number,rows: IWorker[]}, { limit?: number; page?: number; role?: string; name?:string}>({
+      query: ({ limit = 1, page = 1, role = '', name}) => {
         const roleQuery = role ? `&role=${role}` : '';
-        return `/workers?limit=${limit}&page=${page}${roleQuery}`;
+        const nameQuery = name ? `&name=${name}` : '';
+        return `/workers?limit=${limit}&page=${page}${roleQuery}${nameQuery}`;
       },
       providesTags: result=>['Workers']
     }),
     fetchGetUser: builder.query<IWorker, number>({
       query: (id) => `/workers/${id}`,
-      providesTags: result=>['Workers'] // Замените на действительный URL
+      providesTags: result=>['Workers']
     }),
     fetchGetRoles: builder.query<IRole[], null>({
-      query: () => `/roles`, // Замените на действительный URL
-      providesTags: result=>['Roles'] // Замените на действительный URL
+      query: () => `/roles`,
+      providesTags: result=>['Roles']
     }),
     fetchGetRateTypes: builder.query<IRateType[], null>({
-      query: () => `/ratetypes`, // Замените на действительный URL
+      query: () => `/ratetypes`,
     }),
     createWorker: builder.mutation<IWorker, IWorkerCreate>({
       query: (newWorker) => ({
@@ -44,11 +45,18 @@ export const workersApi = Api.injectEndpoints({
     }),
     updateWorker: builder.mutation({
       query: ({id,stateName,dataToUpdate}) => ({
-        url: `/workers/${id}`, // Замените на свой путь обновления данных
+        url: `/workers/${id}`,
         method: 'PUT',
         body: {
           [stateName]:dataToUpdate
         },
+      }),
+      invalidatesTags: ['Workers']
+    }),
+    deleteWlient: builder.mutation<IWorker, number>({
+      query: (id) => ({
+        url: `/workers/${id}`,
+        method: 'DELETE'
       }),
       invalidatesTags: ['Workers']
     }),

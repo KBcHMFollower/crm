@@ -17,14 +17,14 @@ export const ClientsPage = () => {
     const [workersModalOpen, setWorkersModalOpen] = useState(false);
     const [page, setPage] = useState(1);
 
-    const { data: clientsData, isLoading: isClientsLoading } = useGetAllUsersQuery({ limit: limit, page: page, direction: direction, status: status });
+    const { data: clientsData, isLoading: isClientsLoading } = useGetAllUsersQuery({ limit: limit, page: page, direction: direction, status: status, name: findName });
     const { data: directionsData, isLoading: isDirectionsLoading } = useGetDirectionsQuery(null);
     const { data: statusData, isLoading: isStatusLoading } = useGetStatusesQuery(null);
 
     const rights = useAppSelector(state=>state.user.user.rights);
 
-
     const canCreateClient = checkRights(rights, CREATE_CLIENT);
+
     const isLoading = !statusData || !clientsData || !directionsData || isStatusLoading || isDirectionsLoading || isClientsLoading;
 
     return (

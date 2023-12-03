@@ -18,6 +18,7 @@ export const ClientCard: FC<PropsType> = ({ clientId, clientName, clientDirectio
     const onClick = () => {
         navigate(`/clients/${clientId}`)
     }
+    
     return (
         <Button onClick={onClick}
             variant='text'

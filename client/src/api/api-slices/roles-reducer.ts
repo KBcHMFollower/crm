@@ -10,9 +10,10 @@ interface IRolePush{
 
 export const rolesApi = Api.injectEndpoints({
     endpoints: (builder) => ({
-        GetAllRoles: builder.query<IRole[], null>({
-            query: ()=>{
-                return `roles`;
+        GetAllRoles: builder.query<IRole[], {name:string}>({
+            query: ({name})=>{
+                const nameProps = name ? `&name=${name}` : '';
+                return `roles?${nameProps}`;
             },
             providesTags:result=>['Roles']
         }),
@@ -32,7 +33,7 @@ export const rolesApi = Api.injectEndpoints({
           }),
         deleteRoleRight: builder.mutation<IRole, {roleName:string;rightName:string}>({
             query: ({roleName,rightName}) => ({
-              url: `/rights/roles`, // Замените на свой путь обновления данных
+              url: `/rights/roles`,
               method: 'DELETE',
               body: {
                 roleName:roleName,
@@ -41,17 +42,24 @@ export const rolesApi = Api.injectEndpoints({
             }),
             invalidatesTags: ['Roles', 'Rights']
           }),
-          addRoleRight: builder.mutation<IRole, {roleName:string;rightName:string}>({
-            query: ({roleName,rightName}) => ({
-                url: `/rights/roles`, // Замените на свой путь обновления данных
-                method: 'POST',
-                body: {
-                  roleName:roleName,
-                  rightName:rightName
-                },
-              }),
-              invalidatesTags: ['Roles', 'Rights']
+        addRoleRight: builder.mutation<IRole, {roleName:string;rightName:string}>({
+          query: ({roleName,rightName}) => ({
+              url: `/rights/roles`,
+              method: 'POST',
+              body: {
+                roleName:roleName,
+                rightName:rightName
+              },
+            }),
+            invalidatesTags: ['Roles', 'Rights']
+        }),
+        deleteRole: builder.mutation<IRole, number>({
+          query: (id) => ({
+            url: `/roles/${id}`,
+            method: 'DELETE'
           }),
+          invalidatesTags: ['Roles']
+        }),
       }),
 })
 

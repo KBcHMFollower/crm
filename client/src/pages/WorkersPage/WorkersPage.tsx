@@ -14,15 +14,15 @@ export const WorkersPage: FC = () => {
     const [findName, setFindName] = useState('');
     const [role, setRole] = useState('');
     const [page, setPage] = useState(1);
+    const [workersModalOpen, setWorkersModalOpen] = useState(false);
 
     const userRights = useAppSelector(state => state.user.user.rights)
 
-    const { data: WorkersData, error: WorkersError, isLoading: isWorkersLoading } = useFetchAllWorkersQuery({ limit: limit, page: page, role: role });
+    const { data: WorkersData, error: WorkersError, isLoading: isWorkersLoading } = useFetchAllWorkersQuery({ limit: limit, page: page, role: role, name:findName });
     const { data: RolesData, error: RolesError, isLoading: isRolesLoading } = useFetchGetRolesQuery(null);
 
-    const [workersModalOpen, setWorkersModalOpen] = useState(false);
-
     const canCreateWorker = checkRights(userRights, CREATE_WORKER)
+
     const isLoading = isRolesLoading || isWorkersLoading || !WorkersData || !RolesData;
     return (
         <Box sx={{

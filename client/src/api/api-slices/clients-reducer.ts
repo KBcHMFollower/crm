@@ -22,13 +22,14 @@ export interface INotePush{
 
 export const clientsApi = Api.injectEndpoints({
     endpoints: (builder) => ({
-        GetAllUsers: builder.query<{rows: IClient[], count:number}, {limit?:number; page?:number; direction?:string, status?:string}>({
-            query: ({limit, page, direction, status})=>{
+        GetAllUsers: builder.query<{rows: IClient[], count:number}, {limit?:number; page?:number; direction?:string, status?:string, name?:string}>({
+            query: ({limit, page, direction, status, name})=>{
                 const directionProps = direction ? `&direction=${direction}` : '';
                 const statusProps = status ? `&status=${status}` : '';
+                const nameProps = name ? `&name=${name}` : '';
                 const limitProps = limit ? `&limit=${limit}` : '';
                 const pageProps = page ? `&page=${page}` : '';
-                return `clients?${limitProps}${pageProps}${directionProps}${statusProps}`;
+                return `clients?${limitProps}${pageProps}${directionProps}${statusProps}${nameProps}`;
             },
             providesTags:result=>['Clients']
         }),
@@ -48,8 +49,15 @@ export const clientsApi = Api.injectEndpoints({
           }),
         GetClient: builder.query<IClient, number>({
             query: (id) => `/clients/${id}`,
-            providesTags: result=>['Clients'] // Замените на действительный URL
+            providesTags: result=>['Clients']
           }),
+        DeleteClient: builder.mutation<IClient, number>({
+          query: (id) => ({
+            url: `/clients/${id}`,
+            method: 'DELETE'
+          }),
+          invalidatesTags: ['Clients']
+        }),
         getDirections: builder.query<IDirection[], null>({
             query: ()=>'/directions'
         }),
@@ -58,7 +66,7 @@ export const clientsApi = Api.injectEndpoints({
         }),
         updateClient: builder.mutation({
             query: ({id,stateName,dataToUpdate}) => ({
-              url: `/clients/${id}`, // Замените на свой путь обновления данных
+              url: `/clients/${id}`,
               method: 'PUT',
               body: {
                 [stateName]:dataToUpdate
@@ -78,5 +86,5 @@ export const clientsApi = Api.injectEndpoints({
 })
 
 export const {useGetAllUsersQuery, useGetDirectionsQuery, useGetStatusesQuery, useCreateClientMutation, useUpdateClientMutation, useGetClientQuery,
-useGetNotesQuery, useCreateNoteMutation} = clientsApi;
+useGetNotesQuery, useCreateNoteMutation, useDeleteClientMutation} = clientsApi;
 export default clientsApi;

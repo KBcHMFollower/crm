@@ -18,6 +18,7 @@ export const LeadCard: FC<PropsType> = ({ goToNextStap, clientId, clientDirectio
                 flexDirection: 'column'
             }}>
             <ClientCard
+                key={clientId}
                 clientId={clientId}
                 clientDirection={clientDirection}
                 clientName={clientName}

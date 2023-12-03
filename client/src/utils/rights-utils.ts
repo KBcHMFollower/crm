@@ -7,6 +7,8 @@ export const CREATE_CLIENT = 'create-client'
 export const UPDATE_WORKER = 'update-worker'
 export const UPDATE_CLIENT = 'update-client'
 export const CREATE_NOTE = 'create-note'
+export const DELETE_WORKER = 'delete-worker'
+export const DELETE_CLIENT = 'delete-client'
 
 export const checkRights = (rightList:string[], right:string)=>{
     return rightList.some(e=>((e == right) || (e == ADMIN)))

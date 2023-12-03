@@ -173,7 +173,7 @@ export const CreateClientModalWindow: React.FC<PropsType> = ({ open, setOpen }) 
                         required
                         name="number"
                         label="Phone number"
-                        type="tel"
+                        type="number"
                         id="number"
                         autoComplete="tel"
                         sx={{ width: 300 }}

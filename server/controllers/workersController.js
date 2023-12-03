@@ -114,7 +114,7 @@ class WorkerController {
 
   async getAll(req, res, next) {
     try {
-      var { role, limit, page } = req.query;
+      var { role, limit, page, name} = req.query;
 
       page = page || 1;
       limit = limit || 9;
@@ -122,10 +122,26 @@ class WorkerController {
 
       var Workers;
       var roleParams = {};
+      var nameParams = {};
 
       if (role) roleParams = { ...roleParams, name: role };
+      if (name) nameParams = {
+        [Op.or]:{
+          fname:{
+            [Op.iLike]:{
+              [Op.any]:[`%${name}%`]
+            }
+          },
+          lname:{
+            [Op.iLike]:{
+              [Op.any]:[`%${name}%`]
+            }
+          }
+        }
+      }
 
       Workers = await Worker.findAndCountAll({
+        where:{...nameParams},
         include: [
           {
             model: WorkerRate,

@@ -1,5 +1,6 @@
 const ApiError = require("../errors/ApiError");
 const { Client, Status, Direction } = require("../models/models");
+const { Op, where } = require("sequelize");
 
 const findDirectionAttributes = {
   exclude: ["createdAt", "updatedAt"],
@@ -41,7 +42,7 @@ const createClientRes = async (client)=>{
 class ClientsController {
   async getAll(req, res, next) {
     try {
-        var { direction, status, limit, page } = req.query;
+        var { direction, status, limit, page, name } = req.query;
   
         page = page || 1;
         limit = limit || 9;
@@ -50,11 +51,27 @@ class ClientsController {
         var client;
         var directionParams = {};
         var statusParams = {};
+        var nameParams = {};
   
         if (direction) directionParams = { ...directionParams, name: direction };
         if (status) statusParams = { ...statusParams, name: status };
+        if (name) nameParams = {
+          [Op.or]:{
+            fname:{
+              [Op.iLike]:{
+                [Op.any]:[`%${name}%`]
+              }
+            },
+            lname:{
+              [Op.iLike]:{
+                [Op.any]:[`%${name}%`]
+              }
+            }
+          }
+        }
   
         client = await Client.findAndCountAll({
+          where:{...nameParams},
           include: [
             {
               model: Status,

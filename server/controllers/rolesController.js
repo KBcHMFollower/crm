@@ -1,5 +1,6 @@
 const ApiError = require("../errors/ApiError");
-const { Role, Right, RolesAndRight } = require("../models/models");
+const { Role, Right, RolesAndRight, Worker } = require("../models/models");
+const { Op, where } = require("sequelize");
 
 const findRolesAttributes = {
   exclude: ["createdAt", "updatedAt"],
@@ -12,7 +13,22 @@ const findRightsAttributes = {
 class RolesController {
   async getAll(req, res, next) {
     try {
+      const {name} = req.query
+
+      console.log(name)
+
+      var nameParams = {};
+
+      if (name) nameParams = {
+          name:{
+            [Op.iLike]:{
+              [Op.any]:[`%${name}%`]
+            }
+          },
+        }
+
       const roles = await Role.findAll({
+        where:{...nameParams},
         attributes: {
           ...findRolesAttributes,
         },
@@ -77,6 +93,41 @@ class RolesController {
       res.json(role);
     } catch (e) {
       return next(ApiError.badRequest(e.message));
+    }
+  }
+
+  async delete(req, res, next){
+    try {
+      const {id} = req.params
+
+      if (!id) return next(ApiError.badRequest('не указан id'))
+
+      const role = await Role.findOne({
+        where:{id:id}
+      })
+      if (!role) return next(ApiError.badRequest('нет роли с заданным id'))
+      if (role.name === 'default') return next(ApiError.badRequest('нельзя удалить эту роль!'))
+
+      var defaultRole = await Role.findOne({
+        where:{name : 'default'}
+      })
+
+      if (!defaultRole) defaultRole = await Role.create({name: 'default'})
+
+      const updateWorkersRole = await Worker.update({RoleId: defaultRole.id},
+        {
+          where: {RoleId: id}
+        })
+
+      const deleteRoleRights = await RolesAndRight.destroy({
+        where:{RoleId:id}
+      })
+
+      const deleteRole = await role.destroy()
+
+      res.json(deleteRole)
+    } catch (error) {
+      return next(ApiError.badRequest(error.message))
     }
   }
 }
