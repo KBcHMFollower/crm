@@ -69,6 +69,7 @@ class WorkerController {
   async login(req, res, next) {
     try {
       const { login, pass } = req.body;
+
       //проверка логина
       const user = await Worker.findOne({
         where: { login: login },
@@ -78,6 +79,9 @@ class WorkerController {
       }
       //проверка пароля
       const comparePassword = bcrypt.compareSync(pass, user.pass);
+
+      console.log(`${comparePassword}\n${pass}\n${user.pass}`);
+
       if (!comparePassword) {
         return next(ApiError.internal("Не правильный логин или пароль"));
       }
@@ -257,6 +261,7 @@ class WorkerController {
       if (!findRateType) {
         return next(ApiError.badRequest("роли с таким id не найдено"));
       }
+      console.log(findRateType)
 
       //create rateType
       const workerRate = await WorkerRate.create({
@@ -264,6 +269,8 @@ class WorkerController {
         RateTypeId: findRateType.id,
         rate: rate,
       });
+
+      console.log(workerRate)
 
 
       const workerRes = await createWorkerRes(worker)

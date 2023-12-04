@@ -33,8 +33,8 @@ const RolesAndRight = sequelize.define('RolesAndRights', {
     id:{type:DataTypes.INTEGER, primaryKey:true, autoIncrement:true},
 })
 
-const WorkerRate = sequelize.define('WorkersRate', {
-    rate:{type:DataTypes.INTEGER},
+const WorkerRate = sequelize.define('WorkersRates', {
+    rate:{type:DataTypes.STRING},
 })
 
 //ClientsSection

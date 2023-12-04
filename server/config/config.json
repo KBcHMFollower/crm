@@ -1,0 +1,26 @@
+{
+    "development": {
+      "username": "postgres",
+      "password": "admin",
+      "database": "crm",
+      "host": "postgres",
+      "port": 5432,
+      "dialect": "postgres"
+    },
+    "test": {
+      "username": "postgres",
+      "password": "admin",
+      "database": "crm",
+      "port": 5001,
+      "host": "localhost",
+      "dialect": "postgres"
+    },
+    "production": {
+      "username": "postgres",
+      "password": "admin",
+      "port": 5001,
+      "database": "crm",
+      "host": "localhost",
+      "dialect": "postgres"
+    }
+}

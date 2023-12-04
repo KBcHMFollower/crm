@@ -39,7 +39,7 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({ open, setOpen }) 
   const { data: RoleList, isLoading: RolesLoading } = useFetchGetRolesQuery(null)
   const { data: RateTypeList, isLoading: RateTypesLoading } = useFetchGetRateTypesQuery(null)
 
-  const [createWorker, { isLoading: isCreating }] = useCreateWorkerMutation()
+  const [createWorker, { isLoading: isCreating, error }] = useCreateWorkerMutation()
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -53,7 +53,7 @@ export const CreateWorkerModalWindow: React.FC<PropsType> = ({ open, setOpen }) 
       email: data.get('email') as string,
       phone: data.get('number') as string,
       rateType: rateType as string,
-      rate: parseFloat(data.get('rate') as string),
+      rate: data.get('rate') as string,
       role: role as string,
     }
     if (FormValidate(doby)) {

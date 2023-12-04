@@ -113,7 +113,7 @@ export const ProfilePage: React.FC = () => {
             <ProfileTextField
               updateble={updateble}
               defaultValue={user.lname}
-              stateName='lanme'
+              stateName='lname'
               lable='LastName'
               onBlurCall={(stateName: string, newValue: string) => updateWorker({ id: Number(userId), stateName: stateName, dataToUpdate: newValue })}
             />

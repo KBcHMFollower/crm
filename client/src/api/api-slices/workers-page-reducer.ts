@@ -11,7 +11,7 @@ export interface  IWorkerCreate{
   email: string;
   birthday: string;
   rateType: string;
-  rate: number;
+  rate: string;
   role: string;
 }
 export const workersApi = Api.injectEndpoints({

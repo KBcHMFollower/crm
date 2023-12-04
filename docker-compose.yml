@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  server:
+    build: 
+      context: .
+      dockerfile: ./server/Dockerfile
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./server/.development.env
+    depends_on:
+      - postgres
+  
+  client:
+    build: 
+      context: .
+      dockerfile: ./client/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+  postgres:
+    image: postgres
+    ports:
+      - "5001:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=crm
+
